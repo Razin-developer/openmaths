@@ -11,6 +11,7 @@ import { Tabs } from "@/components/Tabs";
 import { TestimonialCard } from "@/components/TestimonialCard";
 import { CTABand } from "@/components/CTABand";
 import { TESTIMONIALS, USE_CASES } from "@/lib/placeholder-content";
+import { TOOLS } from "@/lib/tools-data";
 
 const FORMS = [
   { icon: <Shapes className="size-6 text-accent" />, title: "Geometry", description: "Draws the diagram, then explains it step by step." },
@@ -164,6 +165,27 @@ export default function HomePage() {
             </Reveal>
           ))}
         </div>
+      </Section>
+
+      <Section width="wide">
+        <Reveal className="mb-10 text-center">
+          <h2 className="text-h2 font-semibold">Free math tools, no login</h2>
+        </Reveal>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {TOOLS.slice(0, 3).map((tool, i) => (
+            <Reveal key={tool.slug} index={i}>
+              <a href={`/tools/${tool.slug}`} className="flex h-full flex-col gap-2 rounded-xl border border-border bg-muted/40 p-6 transition-colors hover:bg-muted">
+                <h3 className="text-h4 font-semibold">{tool.name}</h3>
+                <p className="text-body-sm text-muted-foreground">{tool.shortDescription}</p>
+              </a>
+            </Reveal>
+          ))}
+        </div>
+        <Reveal index={3} className="mt-8 flex justify-center">
+          <Button href="/tools" variant="secondary">
+            See all tools
+          </Button>
+        </Reveal>
       </Section>
 
       <Section>

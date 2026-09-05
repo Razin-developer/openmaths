@@ -20,6 +20,9 @@ export function Nav() {
           <Link href="/product" className="transition-colors hover:text-foreground">
             Product
           </Link>
+          <Link href="/tools" className="transition-colors hover:text-foreground">
+            Tools
+          </Link>
           <Link href="/pricing" className="transition-colors hover:text-foreground">
             Pricing
           </Link>
