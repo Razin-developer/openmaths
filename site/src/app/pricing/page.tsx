@@ -3,6 +3,7 @@ import { Section } from "@/components/Section";
 import { Reveal } from "@/components/Reveal";
 import { PricingTable, type PricingTier } from "@/components/PricingTable";
 import { CTABand } from "@/components/CTABand";
+import { APP_URL } from "@/lib/urls";
 
 export const metadata: Metadata = {
   title: "Pricing",
@@ -16,7 +17,7 @@ const TIERS: PricingTier[] = [
     description: "For getting started.",
     features: ["Unlimited canvases", "Step-by-step answers with diagrams", "Community support"],
     cta: "Start free",
-    href: "http://localhost:3000",
+    href: APP_URL,
   },
   {
     name: "Pro",
@@ -25,7 +26,7 @@ const TIERS: PricingTier[] = [
     description: "For regular use.",
     features: ["Everything in Free", "Voice narration & video export", "Higher generation limits", "Priority support"],
     cta: "Start Pro trial",
-    href: "http://localhost:3000",
+    href: APP_URL,
     highlighted: true,
   },
   {

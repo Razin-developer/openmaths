@@ -21,7 +21,9 @@ export function PricingTable({ tiers }: { tiers: PricingTier[] }) {
           key={tier.name}
           className={cn(
             "flex flex-col gap-6 rounded-xl border p-8",
-            tier.highlighted ? "border-accent bg-accent-100/40" : "border-border bg-muted/40"
+            tier.highlighted
+              ? "border-accent-violet-500 bg-surface-card shadow-[0_0_0_1px_var(--accent-violet-500)]"
+              : "border-border-hairline bg-surface-card"
           )}
         >
           <div className="flex flex-col gap-2">

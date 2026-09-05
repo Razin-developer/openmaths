@@ -36,12 +36,40 @@
   --warning: oklch(0.75 0.15 80);
   --danger: oklch(0.58 0.2 25);
 
-  --background: var(--paper-50);
+  /* Surface stratification (Landing-rework PRD §3.1) — light mode: a flat two-layer model
+   * (`--background`/`--muted`) becomes base/shell/card/glass so the site reads as a layered
+   * canvas, not a single sheet. */
+  --surface-base: #f8fafc;
+  --surface-shell: #ffffff;
+  --surface-card: #ffffff;
+  --surface-card-hover: #f1f5f9;
+  --border-hairline: rgba(2, 6, 23, 0.08);
+  --border-strong: rgba(2, 6, 23, 0.16);
+  --glass-bg: rgba(255, 255, 255, 0.72);
+  --glass-blur: 16px;
+
+  /* Three-accent system (§3.2) — each accent has one job: blue is primary/reasoning, violet is
+   * branching/featured, emerald is verification/success. Tint/shade steps let small text on dark
+   * surfaces use the lightened `-400` step to hold the §8.3 contrast gate. */
+  --accent-blue-400: #60a5fa;
+  --accent-blue-500: #3b82f6;
+  --accent-blue-600: #2563eb;
+  --accent-violet-400: #a78bfa;
+  --accent-violet-500: #8b5cf6;
+  --accent-violet-600: #7c3aed;
+  --accent-emerald-400: #34d399;
+  --accent-emerald-500: #10b981;
+  --accent-emerald-600: #059669;
+
+  --gradient-reasoning: linear-gradient(135deg, var(--accent-blue-500), var(--accent-violet-500));
+  --gradient-glow-blue: radial-gradient(60% 60% at 50% 0%, rgba(59, 130, 246, 0.35), transparent);
+
+  --background: var(--surface-base);
   --foreground: var(--paper-950);
-  --muted: var(--paper-200);
+  --muted: var(--surface-shell);
   --muted-foreground: var(--paper-600);
-  --border: var(--paper-300);
-  --accent: var(--accent-500);
+  --border: var(--border-hairline);
+  --accent: var(--accent-blue-500);
   --accent-foreground: var(--paper-50);
 
   --gradient-glow: radial-gradient(60% 60% at 50% 0%, oklch(0.86 0.06 275 / 35%), transparent);
@@ -66,12 +94,24 @@
 }
 
 .dark {
-  --background: var(--paper-950);
+  /* Surface stratification, dark mode — the audit's canonical hero look. */
+  --surface-base: #08090a;
+  --surface-shell: #0e1013;
+  --surface-card: #14171c;
+  --surface-card-hover: #181c22;
+  --border-hairline: rgba(255, 255, 255, 0.08);
+  --border-strong: rgba(255, 255, 255, 0.16);
+  --glass-bg: rgba(20, 23, 28, 0.75);
+
+  --gradient-reasoning: linear-gradient(135deg, var(--accent-blue-400), var(--accent-violet-400));
+  --gradient-glow-blue: radial-gradient(60% 60% at 50% 0%, rgba(59, 130, 246, 0.45), transparent);
+
+  --background: var(--surface-base);
   --foreground: var(--paper-50);
-  --muted: var(--paper-800);
+  --muted: var(--surface-shell);
   --muted-foreground: var(--paper-400);
-  --border: var(--paper-800);
-  --accent: var(--accent-400);
+  --border: var(--border-hairline);
+  --accent: var(--accent-blue-400);
   --accent-foreground: var(--paper-950);
 
   --gradient-glow: radial-gradient(60% 60% at 50% 0%, oklch(0.4 0.17 275 / 45%), transparent);
@@ -111,6 +151,24 @@
   --color-warning: var(--warning);
   --color-danger: var(--danger);
 
+  /* Surface stratification + three-accent system (Landing-rework PRD §3.1/§3.2). */
+  --color-surface-base: var(--surface-base);
+  --color-surface-shell: var(--surface-shell);
+  --color-surface-card: var(--surface-card);
+  --color-surface-card-hover: var(--surface-card-hover);
+  --color-border-hairline: var(--border-hairline);
+  --color-border-strong: var(--border-strong);
+  --color-glass-bg: var(--glass-bg);
+  --color-accent-blue-400: var(--accent-blue-400);
+  --color-accent-blue-500: var(--accent-blue-500);
+  --color-accent-blue-600: var(--accent-blue-600);
+  --color-accent-violet-400: var(--accent-violet-400);
+  --color-accent-violet-500: var(--accent-violet-500);
+  --color-accent-violet-600: var(--accent-violet-600);
+  --color-accent-emerald-400: var(--accent-emerald-400);
+  --color-accent-emerald-500: var(--accent-emerald-500);
+  --color-accent-emerald-600: var(--accent-emerald-600);
+
   --radius-sm: var(--radius-sm);
   --radius-md: var(--radius-md);
   --radius-lg: var(--radius-lg);
@@ -119,6 +177,9 @@
 
   --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+  /* JetBrains Mono for code/formula/numeric emphasis (§3.3) — Geist Mono stays `--font-mono`'s
+   * base for anything generic; this is the deliberate "looks like data/math" face. */
+  --font-mono-code: var(--font-jetbrains-mono), var(--font-geist-mono), ui-monospace, monospace;
 
   /* Type scale (PRD §3) — font-size/line-height pairs as Tailwind's paired-value tuple syntax. */
   --text-display-2xl: 4.5rem;
@@ -200,4 +261,14 @@ body {
   opacity: 1;
   -webkit-mask-image: linear-gradient(180deg, black, transparent);
   mask-image: linear-gradient(180deg, black, transparent);
+}
+
+/* Dot-grid canvas motif (Landing-rework PRD §3.4) — dots, not lines, so the site reads as the
+ * app's infinite canvas rather than graph paper. Radial fade keeps it connective tissue, not
+ * noise, when used on a section shell instead of just the hero. */
+.bg-dot-grid {
+  background-image: radial-gradient(circle, var(--border-hairline) 1px, transparent 1px);
+  background-size: 24px 24px;
+  -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, black, transparent);
+  mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, black, transparent);
 }

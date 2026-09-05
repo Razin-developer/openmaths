@@ -3,6 +3,7 @@
 import { useRef } from "react";
 import Link from "next/link";
 import { motion, useReducedMotion } from "motion/react";
+import posthog from "posthog-js";
 import { cn } from "@openmaths/components/lib/utils";
 
 type Variant = "primary" | "secondary" | "ghost";
@@ -14,6 +15,9 @@ interface ButtonProps {
   className?: string;
   onClick?: () => void;
   type?: "button" | "submit";
+  /** PRD landing-rework §4.7: a lightweight id so primary CTAs emit a measurable analytics event
+   * on click, without embedding PII — pass a stable slug like "hero-start-free". */
+  ctaId?: string;
 }
 
 const VARIANT_CLASS: Record<Variant, string> = {
@@ -27,9 +31,14 @@ const MAGNETIC_STRENGTH = 0.25;
 /** Primary/secondary/ghost per PRD §3; a subtle "magnetic" pull toward the cursor on hover (§4's
  * named "magnetic buttons... used sparingly" pattern) — skipped under reduced motion, since the
  * effect is pure delight with no comprehension value. */
-export function Button({ children, href, variant = "primary", className, onClick, type = "button" }: ButtonProps) {
+export function Button({ children, href, variant = "primary", className, onClick, type = "button", ctaId }: ButtonProps) {
   const ref = useRef<HTMLDivElement>(null);
   const reduceMotion = useReducedMotion();
+
+  function handleActivate() {
+    if (ctaId) posthog.capture("cta_click", { cta_id: ctaId, variant, href });
+    onClick?.();
+  }
 
   function handleMouseMove(e: React.MouseEvent<HTMLDivElement>) {
     if (reduceMotion || !ref.current) return;
@@ -57,11 +66,11 @@ export function Button({ children, href, variant = "primary", className, onClick
       transition={{ type: "spring", stiffness: 150, damping: 15 }}
     >
       {href ? (
-        <Link href={href} className={classes}>
+        <Link href={href} className={classes} onClick={ctaId ? handleActivate : onClick}>
           {children}
         </Link>
       ) : (
-        <button type={type} onClick={onClick} className={classes}>
+        <button type={type} onClick={handleActivate} className={classes}>
           {children}
         </button>
       )}

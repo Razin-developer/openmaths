@@ -35,14 +35,14 @@ export function BentoCard({ title, description, className, icon }: BentoCardProp
       ref={ref}
       onMouseMove={handleMouseMove}
       className={cn(
-        "group relative overflow-hidden rounded-xl border border-border bg-muted/40 p-6",
+        "group relative overflow-hidden rounded-xl border border-border-hairline bg-surface-card p-6 transition-colors duration-base hover:bg-surface-card-hover",
         className
       )}
     >
       <div
         className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-base group-hover:opacity-100"
         style={{
-          background: `radial-gradient(${SPOTLIGHT_SIZE}px circle at var(--spot-x, 50%) var(--spot-y, 50%), var(--accent-100), transparent)`,
+          background: `radial-gradient(${SPOTLIGHT_SIZE}px circle at var(--spot-x, 50%) var(--spot-y, 50%), color-mix(in oklch, var(--accent-blue-500) 35%, transparent), transparent)`,
         }}
         aria-hidden
       />

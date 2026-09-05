@@ -12,6 +12,7 @@ import { TestimonialCard } from "@/components/TestimonialCard";
 import { CTABand } from "@/components/CTABand";
 import { TESTIMONIALS, USE_CASES } from "@/lib/placeholder-content";
 import { TOOLS } from "@/lib/tools-data";
+import { APP_URL } from "@/lib/urls";
 
 const FORMS = [
   { icon: <Shapes className="size-6 text-accent" />, title: "Geometry", description: "Draws the diagram, then explains it step by step." },
@@ -54,10 +55,10 @@ export default function HomePage() {
               </p>
             </Reveal>
             <Reveal index={2} className="flex gap-3">
-              <Button href="http://localhost:3000" variant="primary">
+              <Button href={APP_URL} variant="primary" ctaId="hero-start-free">
                 Start free
               </Button>
-              <Button href="/product" variant="secondary">
+              <Button href="/product" variant="secondary" ctaId="hero-see-it-work">
                 See it work
               </Button>
             </Reveal>
