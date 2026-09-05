@@ -1,5 +1,7 @@
 # openmaths
 
+[![CI](https://github.com/Razin-developer/openmaths/actions/workflows/ci.yml/badge.svg)](https://github.com/Razin-developer/openmaths/actions/workflows/ci.yml)
+
 AI-drawn, step-by-step math canvas — ask a question, get a worked solution with an animated,
 narrated diagram alongside it, on an infinite canvas you can branch, annotate, and share.
 
