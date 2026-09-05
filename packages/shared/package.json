@@ -28,6 +28,7 @@
     "@razinmohammedpt/hackai-sdk": "^2.0.0"
   },
   "devDependencies": {
+    "@types/node": "^20",
     "typescript": "^5"
   }
 }

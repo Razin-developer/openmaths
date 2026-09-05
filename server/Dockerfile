@@ -3,18 +3,17 @@
 # itself, since pnpm resolves `@openmaths/*` workspace deps by real path, not a registry.
 
 FROM node:22-alpine AS base
-# pnpm checks this to skip interactive prompts (e.g. "reinstall from scratch?" before `pnpm
-# prune`) — real CI sets it automatically, but a `docker build` doesn't inherit the host shell's
-# env at all, so without this the prune step below hangs forever waiting on stdin no CI runner
-# ever connects (found the hard way: a real GitHub Actions run hit this and ran until the 6-hour
-# job timeout killed it).
+# pnpm checks this to skip interactive prompts (e.g. the "reinstall from scratch?" confirmation a
+# `pnpm prune` used to trigger here) — real CI sets it automatically, but a `docker build` doesn't
+# inherit the host shell's env at all, so without this a prompt like that hangs forever waiting on
+# stdin no CI runner ever connects (found the hard way: a real GitHub Actions run hit exactly this
+# and ran until the 6-hour job timeout killed it). Kept even after removing the `prune` step below
+# (see the runner stage) since it's cheap insurance against any other pnpm command doing the same.
 ENV CI=true
 RUN corepack enable
 WORKDIR /repo
 
-# `build` also doubles as the `migrate` compose service's image (see docker-compose.yml) — it
-# still has the `prisma` CLI (a devDependency of packages/db), which the pruned runtime image
-# below deliberately drops.
+# `build` also doubles as the `migrate` compose service's image (see docker-compose.yml).
 FROM base AS build
 COPY . .
 RUN pnpm install --frozen-lockfile
@@ -28,10 +27,11 @@ RUN pnpm --filter @openmaths/db run build
 FROM base AS runner
 ENV NODE_ENV=production
 COPY --from=build /repo /repo
-# Strips devDependencies workspace-wide now that prisma generate has already run — safe, its
-# output already exists on disk. `server`'s own `tsx` stays; it was moved to a real (non-dev)
-# dependency for exactly this image (see server/package.json).
-RUN pnpm prune --prod
+# Deliberately NOT `pnpm prune --prod` here: a real CI run caught it silently breaking `server`'s
+# own `node_modules/.bin/tsx` symlink (the pruned image booted, but `pnpm start` then failed with
+# `sh: tsx: not found`) on top of the interactive-prompt hang the `ENV CI=true` above already fixed
+# once. Two independent failure modes from the same "optimization" is enough — trading some image
+# size for an image that actually boots.
 WORKDIR /repo/server
 EXPOSE 4000
 CMD ["pnpm", "start"]
