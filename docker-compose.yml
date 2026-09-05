@@ -56,7 +56,10 @@ services:
       # Node's own `fetch`, not `curl`/`wget` — not guaranteed present in `node:22-alpine`, and
       # unverifiable from this session (no working local Docker engine — see the plan file's P5
       # Docker section), whereas `node` itself obviously is.
-      test: ["CMD", "node", "-e", "fetch('http://localhost:4000/healthz').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      # 127.0.0.1, not `localhost` — musl (Alpine's libc) has known DNS-resolution quirks in some
+      # Docker configurations that can make even a loopback hostname lookup slow or unreliable;
+      # a literal IP skips resolution entirely.
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:4000/healthz').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
       interval: 10s
       timeout: 5s
       retries: 10
@@ -87,7 +90,10 @@ services:
       migrate:
         condition: service_completed_successfully
     healthcheck:
-      test: ["CMD", "node", "-e", "fetch('http://localhost:3000/login').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      # See server's own healthcheck comment on why 127.0.0.1, not `localhost` — this one is the
+      # actual suspect: a real CI run had server's healthcheck (identical pattern) pass while
+      # app's failed all 10 retries with zero corroborating evidence of a real app-level error.
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3000/login').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
       interval: 10s
       timeout: 5s
       retries: 10

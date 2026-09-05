@@ -118,7 +118,17 @@ jobs:
 
       - name: Dump logs on failure
         if: failure()
-        run: docker compose logs
+        run: |
+          docker compose ps
+          docker compose logs
+          # Container stdout/stderr never includes HEALTHCHECK's own output (Docker captures it
+          # separately) — this is the only way to see *why* a healthcheck actually failed, found
+          # the hard way after a real run left app "unhealthy" with zero corroborating evidence in
+          # its regular logs.
+          for c in $(docker compose ps -q); do
+            echo "--- health: $c ---"
+            docker inspect --format '{{json .State.Health}}' "$c" || true
+          done
 
       - name: Tear down
         if: always()
