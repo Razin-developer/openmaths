@@ -348,3 +348,23 @@ model SkillTag {
 
   @@unique([userId, name])
 }
+
+enum ContactSubmissionType {
+  CONTACT
+  FEEDBACK
+  BUG_REPORT
+}
+
+/** Marketing site (PRD "Public Product Site, Pages & Design/Motion System" P5) — /contact,
+ * /feedback, and /report-bug all post here via `POST /contact` on `server`; one model/route for
+ * all three, distinguished by `type`, since they're the same shape (name, email, message) with
+ * different intent, not different data. No user relation — these come from anonymous visitors,
+ * not authenticated accounts. */
+model ContactSubmission {
+  id        String                @id @default(cuid())
+  type      ContactSubmissionType
+  name      String
+  email     String
+  message   String
+  createdAt DateTime              @default(now())
+}

@@ -21,6 +21,7 @@ import { narrateRoutes } from "./routes/narrate";
 import { messageRoutes } from "./routes/messages";
 import { blockGenerationRoutes } from "./routes/blockGeneration";
 import { linkPreviewRoutes } from "./routes/linkPreview";
+import { contactRoutes } from "./routes/contact";
 
 /**
  * PRD "Split into app + server" — P1 stood up the first real, DB-backed, auth-verified read-only
@@ -61,6 +62,7 @@ app.route("/", narrateRoutes);
 app.route("/", messageRoutes);
 app.route("/", blockGenerationRoutes);
 app.route("/", linkPreviewRoutes);
+app.route("/", contactRoutes);
 
 const port = env.PORT;
 serve({ fetch: app.fetch, port }, (info) => {

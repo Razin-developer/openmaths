@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 import { TOOLS } from "@/lib/tools-data";
 import { getAllPosts, getAllResources, getAllHelpArticles } from "@/lib/content";
+import { CASE_STUDIES } from "@/lib/case-studies";
 
 const SITE_URL = "https://openmaths.com";
 
@@ -25,10 +26,23 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${SITE_URL}/help`, lastModified: new Date(), changeFrequency: "monthly", priority: 0.6 },
     { url: `${SITE_URL}/changelog`, lastModified: new Date(), changeFrequency: "weekly", priority: 0.6 },
     { url: `${SITE_URL}/faq`, lastModified: new Date(), changeFrequency: "monthly", priority: 0.6 },
+    { url: `${SITE_URL}/about`, lastModified: new Date(), changeFrequency: "yearly", priority: 0.5 },
+    { url: `${SITE_URL}/reviews`, lastModified: new Date(), changeFrequency: "weekly", priority: 0.5 },
+    { url: `${SITE_URL}/community`, lastModified: new Date(), changeFrequency: "monthly", priority: 0.4 },
+    { url: `${SITE_URL}/contact`, lastModified: new Date(), changeFrequency: "yearly", priority: 0.4 },
+    { url: `${SITE_URL}/feedback`, lastModified: new Date(), changeFrequency: "yearly", priority: 0.4 },
+    { url: `${SITE_URL}/report-bug`, lastModified: new Date(), changeFrequency: "yearly", priority: 0.4 },
+    { url: `${SITE_URL}/privacy`, lastModified: new Date(), changeFrequency: "yearly", priority: 0.3 },
+    { url: `${SITE_URL}/terms`, lastModified: new Date(), changeFrequency: "yearly", priority: 0.3 },
+    { url: `${SITE_URL}/cookies`, lastModified: new Date(), changeFrequency: "yearly", priority: 0.3 },
+    { url: `${SITE_URL}/security`, lastModified: new Date(), changeFrequency: "yearly", priority: 0.3 },
+    { url: `${SITE_URL}/acceptable-use`, lastModified: new Date(), changeFrequency: "yearly", priority: 0.3 },
+    { url: `${SITE_URL}/dpa`, lastModified: new Date(), changeFrequency: "yearly", priority: 0.3 },
     ...TOOLS.map((tool) => ({ url: `${SITE_URL}/tools/${tool.slug}`, lastModified: new Date(), changeFrequency: "monthly" as const, priority: 0.7 })),
     ...posts.map((post) => ({ url: `${SITE_URL}/blog/${post.slug}`, lastModified: new Date(post.date), changeFrequency: "monthly" as const, priority: 0.6 })),
     ...categories.map((category) => ({ url: `${SITE_URL}/blog/category/${category}`, lastModified: new Date(), changeFrequency: "weekly" as const, priority: 0.5 })),
     ...resources.map((resource) => ({ url: `${SITE_URL}/resources/${resource.slug}`, lastModified: new Date(resource.date), changeFrequency: "monthly" as const, priority: 0.6 })),
     ...helpArticles.map((article) => ({ url: `${SITE_URL}/help/${article.slug}`, lastModified: new Date(), changeFrequency: "monthly" as const, priority: 0.5 })),
+    ...CASE_STUDIES.map((study) => ({ url: `${SITE_URL}/customers/${study.slug}`, lastModified: new Date(), changeFrequency: "yearly" as const, priority: 0.4 })),
   ];
 }

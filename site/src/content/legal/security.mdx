@@ -1,0 +1,28 @@
+export const metadata = {
+  title: "Security",
+  lastUpdated: "2026-09-05",
+};
+
+**Last updated: September 5, 2026**
+
+## Account security
+
+- Passwords are hashed, never stored in plain text.
+- Optional two-factor authentication (TOTP, via any standard authenticator app) can be enabled from account settings.
+- New passwords are checked against known-breached password lists before being accepted.
+- "Sign out of all devices" immediately invalidates every active session.
+
+## Application security
+
+- All traffic is served over HTTPS.
+- Cross-site request forgery (CSRF) protection on every account-mutating request.
+- Rate limiting on login, signup, and password-reset endpoints to slow down automated abuse.
+- A strict Content Security Policy limiting what scripts and resources a page can load.
+
+## Reporting a vulnerability
+
+If you believe you've found a security vulnerability, please report it privately via the [contact form](/contact) rather than a public issue or forum post — we'll respond and work with you on a fix before any public disclosure.
+
+## What this page isn't
+
+This is a summary of measures already in place, not a formal, audited compliance certification (e.g. SOC 2). If your organization needs a formal audit or a signed security questionnaire, [contact us](/contact) to discuss.
