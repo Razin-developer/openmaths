@@ -78,6 +78,27 @@
 }
 
 @theme inline {
+  /* The full ramps (PRD §3), not just the semantic aliases below — lets components reach for
+   * `bg-accent-100`/`text-paper-600` etc. directly when a semantic token doesn't fit. */
+  --color-paper-50: var(--paper-50);
+  --color-paper-100: var(--paper-100);
+  --color-paper-200: var(--paper-200);
+  --color-paper-300: var(--paper-300);
+  --color-paper-400: var(--paper-400);
+  --color-paper-500: var(--paper-500);
+  --color-paper-600: var(--paper-600);
+  --color-paper-700: var(--paper-700);
+  --color-paper-800: var(--paper-800);
+  --color-paper-900: var(--paper-900);
+  --color-paper-950: var(--paper-950);
+  --color-accent-100: var(--accent-100);
+  --color-accent-200: var(--accent-200);
+  --color-accent-300: var(--accent-300);
+  --color-accent-400: var(--accent-400);
+  --color-accent-500: var(--accent-500);
+  --color-accent-600: var(--accent-600);
+  --color-accent-700: var(--accent-700);
+
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-muted: var(--muted);
