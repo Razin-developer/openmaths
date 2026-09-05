@@ -6,6 +6,8 @@ import { Reveal } from "@/components/Reveal";
 import { ProseArticle } from "@/components/ProseArticle";
 import { helpSlugs, getAllHelpArticles } from "@/lib/content";
 
+const SITE_URL = "https://openmaths.com";
+
 export function generateStaticParams() {
   return helpSlugs().map((slug) => ({ slug }));
 }
@@ -15,7 +17,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const articles = await getAllHelpArticles();
   const article = articles.find((a) => a.slug === slug);
   if (!article) return {};
-  return { title: article.title, description: article.description };
+  return { title: article.title, description: article.description, alternates: { canonical: `${SITE_URL}/help/${slug}` } };
 }
 
 export default async function HelpArticlePage({ params }: { params: Promise<{ slug: string }> }) {

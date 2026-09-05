@@ -5,6 +5,8 @@ import "./globals.css";
 import "katex/dist/katex.min.css";
 import { ThemeProvider, THEME_INIT_SCRIPT } from "@openmaths/components/theme-provider";
 import { LenisProvider } from "@/components/LenisProvider";
+import { PostHogProvider } from "@/components/PostHogProvider";
+import { WebVitalsReporter } from "@/components/WebVitalsReporter";
 import { Nav } from "@/components/Nav";
 import { Footer } from "@/components/Footer";
 
@@ -40,6 +42,14 @@ export const metadata: Metadata = {
   },
 };
 
+const organizationJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  name: "openmaths",
+  url: SITE_URL,
+  description: DESCRIPTION,
+};
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" suppressHydrationWarning>
@@ -47,14 +57,18 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <Script id="theme-init" strategy="beforeInteractive">
           {THEME_INIT_SCRIPT}
         </Script>
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }} />
       </head>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <ThemeProvider>
-          <LenisProvider>
-            <Nav />
-            <main>{children}</main>
-            <Footer />
-          </LenisProvider>
+          <PostHogProvider>
+            <WebVitalsReporter />
+            <LenisProvider>
+              <Nav />
+              <main>{children}</main>
+              <Footer />
+            </LenisProvider>
+          </PostHogProvider>
         </ThemeProvider>
       </body>
     </html>

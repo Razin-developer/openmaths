@@ -6,6 +6,8 @@ import { ProseArticle } from "@/components/ProseArticle";
 import { CTABand } from "@/components/CTABand";
 import { resourceSlugs, getAllResources } from "@/lib/content";
 
+const SITE_URL = "https://openmaths.com";
+
 export function generateStaticParams() {
   return resourceSlugs().map((slug) => ({ slug }));
 }
@@ -15,7 +17,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const resources = await getAllResources();
   const resource = resources.find((r) => r.slug === slug);
   if (!resource) return {};
-  return { title: resource.title, description: resource.description };
+  return { title: resource.title, description: resource.description, alternates: { canonical: `${SITE_URL}/resources/${slug}` } };
 }
 
 export default async function ResourcePage({ params }: { params: Promise<{ slug: string }> }) {

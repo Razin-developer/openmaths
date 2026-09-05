@@ -24,7 +24,11 @@ export function HelpSearch({ articles }: { articles: Array<HelpMeta & { slug: st
         placeholder="Search help articles…"
         className="mx-auto w-full max-w-[480px] rounded-pill border border-border bg-background px-5 py-3 text-body text-foreground"
       />
-      {filtered.length === 0 && <p className="text-center text-body text-muted-foreground">No articles match &ldquo;{query}&rdquo;.</p>}
+      {filtered.length === 0 && (
+        <p role="status" className="text-center text-body text-muted-foreground">
+          No articles match &ldquo;{query}&rdquo;.
+        </p>
+      )}
       {categories.map((category) => (
         <div key={category} className="flex flex-col gap-4">
           <h2 className="text-h4 font-semibold">{category}</h2>

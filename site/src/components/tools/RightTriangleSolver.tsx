@@ -55,7 +55,11 @@ export function RightTriangleSolver() {
           Area: {result.area.toFixed(2)} · Perimeter: {result.perimeter.toFixed(2)}
         </p>
       )}
-      {filledCount !== 2 && <p className="text-center text-body-sm text-warning">Fill in exactly two values.</p>}
+      {filledCount !== 2 && (
+        <p role="status" className="text-center text-body-sm text-warning">
+          Fill in exactly two values.
+        </p>
+      )}
     </div>
   );
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useId, useState } from "react";
 import { ChevronDown } from "lucide-react";
 
 export interface FAQItem {
@@ -12,6 +12,7 @@ export interface FAQItem {
 export function FAQAccordion({ items }: { items: FAQItem[] }) {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
   const categories = Array.from(new Set(items.map((item) => item.category)));
+  const baseId = useId();
 
   return (
     <div className="flex flex-col gap-10">
@@ -26,14 +27,25 @@ export function FAQAccordion({ items }: { items: FAQItem[] }) {
               return (
                 <div key={item.question} className="border-b border-border">
                   <button
+                    id={`${baseId}-trigger-${globalIndex}`}
                     onClick={() => setOpenIndex(isOpen ? null : globalIndex)}
                     aria-expanded={isOpen}
+                    aria-controls={`${baseId}-panel-${globalIndex}`}
                     className="flex w-full items-center justify-between gap-4 py-4 text-left text-body font-medium"
                   >
                     {item.question}
                     <ChevronDown className={`size-4 shrink-0 text-muted-foreground transition-transform duration-base ${isOpen ? "rotate-180" : ""}`} />
                   </button>
-                  {isOpen && <p className="pb-4 text-body-sm text-muted-foreground">{item.answer}</p>}
+                  {isOpen && (
+                    <p
+                      id={`${baseId}-panel-${globalIndex}`}
+                      role="region"
+                      aria-labelledby={`${baseId}-trigger-${globalIndex}`}
+                      className="pb-4 text-body-sm text-muted-foreground"
+                    >
+                      {item.answer}
+                    </p>
+                  )}
                 </div>
               );
             })}

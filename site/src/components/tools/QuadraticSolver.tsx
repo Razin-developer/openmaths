@@ -31,7 +31,11 @@ export function QuadraticSolver() {
           <input type="number" value={c} onChange={(e) => setC(e.target.value)} className="rounded-md border border-border bg-background px-3 py-2 text-body text-foreground" />
         </label>
       </div>
-      {!valid && <p className="text-center text-body-sm text-warning">a cannot be 0 — that would make this linear, not quadratic.</p>}
+      {!valid && (
+        <p role="status" className="text-center text-body-sm text-warning">
+          a cannot be 0 — that would make this linear, not quadratic.
+        </p>
+      )}
       {result && (
         <div className="flex flex-col gap-3 rounded-md bg-background py-6 text-center">
           <div>
