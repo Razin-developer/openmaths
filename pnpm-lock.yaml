@@ -189,6 +189,9 @@ importers:
 
   packages/api-client:
     devDependencies:
+      '@types/node':
+        specifier: ^20
+        version: 20.19.43
       typescript:
         specifier: ^5
         version: 5.9.3
@@ -245,6 +248,9 @@ importers:
         specifier: ^8.23.0
         version: 8.23.0
     devDependencies:
+      '@types/node':
+        specifier: ^20
+        version: 20.19.43
       '@types/pg':
         specifier: ^8.21.0
         version: 8.21.0

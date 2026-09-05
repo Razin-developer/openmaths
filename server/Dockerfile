@@ -3,6 +3,12 @@
 # itself, since pnpm resolves `@openmaths/*` workspace deps by real path, not a registry.
 
 FROM node:22-alpine AS base
+# pnpm checks this to skip interactive prompts (e.g. "reinstall from scratch?" before `pnpm
+# prune`) — real CI sets it automatically, but a `docker build` doesn't inherit the host shell's
+# env at all, so without this the prune step below hangs forever waiting on stdin no CI runner
+# ever connects (found the hard way: a real GitHub Actions run hit this and ran until the 6-hour
+# job timeout killed it).
+ENV CI=true
 RUN corepack enable
 WORKDIR /repo
 

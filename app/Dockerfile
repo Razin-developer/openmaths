@@ -2,6 +2,10 @@
 # path (see next.config.ts's `outputFileTracingRoot`), not just its own directory.
 
 FROM node:22-alpine AS base
+# See server/Dockerfile's own comment on this — pnpm skips interactive prompts when it sees this,
+# and a `docker build` never inherits the host shell's env (including real CI's own `CI=true`) the
+# way a plain `RUN` on the host would.
+ENV CI=true
 RUN corepack enable
 WORKDIR /repo
 

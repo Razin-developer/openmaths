@@ -2,6 +2,12 @@
   "name": "openmaths",
   "version": "0.1.0",
   "private": true,
+  "description": "AI-drawn, step-by-step math canvas — ask a question, get a worked solution with an animated, narrated diagram.",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Razin-developer/openmaths.git"
+  },
+  "homepage": "https://github.com/Razin-developer/openmaths#readme",
   "scripts": {
     "dev": "turbo run dev",
     "build": "turbo run build",
