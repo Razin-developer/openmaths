@@ -32,6 +32,11 @@ FROM node:22-alpine AS runner
 WORKDIR /app
 ENV NODE_ENV=production
 ENV PORT=3000
+# Without this, standalone server.js's default bind target left it unreachable even from inside
+# its own container (confirmed on a real CI run: `fetch('http://127.0.0.1:3000/...')` from a
+# separate healthcheck process failed with a generic "fetch failed" — a real connection failure,
+# not an HTTP error status) despite logging "Ready" and printing its own hostname as if serving.
+ENV HOSTNAME=0.0.0.0
 COPY --from=build /repo/app/.next/standalone ./
 COPY --from=build /repo/app/public ./app/public
 COPY --from=build /repo/app/.next/static ./app/.next/static
