@@ -1,6 +1,7 @@
 packages:
   - "app"
   - "server"
+  - "site"
   - "packages/*"
 
 onlyBuiltDependencies:
