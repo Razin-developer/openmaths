@@ -93,7 +93,12 @@ services:
       # See server's own healthcheck comment on why 127.0.0.1, not `localhost` — this one is the
       # actual suspect: a real CI run had server's healthcheck (identical pattern) pass while
       # app's failed all 10 retries with zero corroborating evidence of a real app-level error.
-      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3000/login').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      # Prints status/error text before exiting non-zero — a prior real run's health log showed
+      # every attempt exiting 1 in ~130ms with empty Output, which distinguishes nothing between
+      # "got a real HTTP error status" and "the connection itself failed fast"; this makes the
+      # next failure (if any) self-explanatory in `docker inspect`'s health log instead of another
+      # guess-and-check round.
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3000/login').then(r=>{console.log('status',r.status);process.exit(r.ok?0:1)}).catch(e=>{console.log('fetch error',e.message);process.exit(1)})"]
       interval: 10s
       timeout: 5s
       retries: 10
