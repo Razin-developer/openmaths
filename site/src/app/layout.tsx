@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Script from "next/script";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import "katex/dist/katex.min.css";
 import { ThemeProvider, THEME_INIT_SCRIPT } from "@openmaths/components/theme-provider";
 import { LenisProvider } from "@/components/LenisProvider";
 import { Nav } from "@/components/Nav";

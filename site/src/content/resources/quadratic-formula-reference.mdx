@@ -1,0 +1,45 @@
+export const metadata = {
+  title: "Quadratic Formula Reference",
+  description: "The quadratic formula, what the discriminant tells you before you even solve, and how to read the vertex off the same numbers.",
+  date: "2026-06-18",
+  category: "Cheatsheets",
+  excerpt: "One formula, three things it tells you: the roots, whether they're real or complex, and where the parabola's vertex sits.",
+};
+
+For any quadratic equation in the form $ax^2 + bx + c = 0$ (with $a \neq 0$):
+
+$$
+x = \frac{-b \pm \sqrt{b^2 - 4ac}}{2a}
+$$
+
+## The discriminant tells you what kind of roots to expect — before you finish solving
+
+The expression under the square root, $b^2 - 4ac$, is called the **discriminant**. Its sign alone tells you the nature of the roots:
+
+| Discriminant | Roots |
+|---|---|
+| $> 0$ | Two distinct real roots |
+| $= 0$ | One repeated real root (the parabola touches the x-axis at exactly one point) |
+| $< 0$ | Two complex conjugate roots (the parabola never crosses the x-axis) |
+
+Checking the discriminant's sign first is a fast way to sanity-check a computed answer — if you calculated two different real roots but the discriminant is negative, something went wrong upstream.
+
+## The vertex, from the same coefficients
+
+The parabola $y = ax^2 + bx + c$ has its vertex at:
+
+$$
+x = -\frac{b}{2a}, \qquad y = a\left(-\frac{b}{2a}\right)^2 + b\left(-\frac{b}{2a}\right) + c
+$$
+
+The $x$-coordinate is also the axis of symmetry — the two roots (when real) are always equally spaced on either side of it.
+
+## Worked example
+
+For $x^2 - 3x + 2 = 0$: $a=1$, $b=-3$, $c=2$.
+
+- Discriminant: $(-3)^2 - 4(1)(2) = 9 - 8 = 1$ — positive, so two distinct real roots.
+- Roots: $x = \dfrac{3 \pm 1}{2}$, giving $x = 2$ and $x = 1$.
+- Vertex: $x = \dfrac{3}{2}$, $y = \left(\dfrac{3}{2}\right)^2 - 3\left(\dfrac{3}{2}\right) + 2 = -\dfrac{1}{4}$.
+
+Try your own coefficients in the [Quadratic Equation Solver](/tools/quadratic-equation-solver) — it computes all three of these instantly.

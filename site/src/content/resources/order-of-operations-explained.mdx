@@ -1,0 +1,40 @@
+export const metadata = {
+  title: "Order of Operations (PEMDAS), Explained",
+  description: "Why PEMDAS is a rule about ambiguity, not arithmetic — and the two places students most often trip on it.",
+  date: "2026-07-10",
+  category: "Guides",
+  excerpt: "PEMDAS isn't really about doing multiplication before addition — it's an agreement about how to read an expression that would otherwise be ambiguous.",
+};
+
+**PEMDAS** — Parentheses, Exponents, Multiplication/Division, Addition/Subtraction — is a convention, not a law of arithmetic. Without an agreed order, an expression like
+
+$$
+2 + 3 \times 4
+$$
+
+is genuinely ambiguous: read left to right, you'd get $(2+3) \times 4 = 20$; with multiplication first, you get $2 + (3 \times 4) = 14$. PEMDAS exists so that everyone reading the same expression gets the same answer — the "right" order isn't discovered, it's agreed on.
+
+## The two most common mistakes
+
+**Multiplication and division are the same priority level.** "Multiplication before division" is a common but wrong reading of the acronym — they're actually evaluated together, left to right. So:
+
+$$
+20 \div 4 \times 2 = (20 \div 4) \times 2 = 10, \quad \text{not } 20 \div (4 \times 2) = 2.5
+$$
+
+**Addition and subtraction work the same way** — same priority, left to right, not "addition first."
+
+## A worked example
+
+$$
+3 + 4 \times (6 - 2)^2 \div 8
+$$
+
+1. Parentheses first: $6 - 2 = 4$, giving $3 + 4 \times 4^2 \div 8$
+2. Exponents next: $4^2 = 16$, giving $3 + 4 \times 16 \div 8$
+3. Multiplication/division, left to right: $4 \times 16 = 64$, then $64 \div 8 = 8$, giving $3 + 8$
+4. Addition: $3 + 8 = 11$
+
+## Why this trips people up on calculators, not just paper
+
+Some calculators evaluate strictly left to right with no operator precedence at all — typing `2 + 3 * 4` gets you 20, not 14, because the calculator never applied PEMDAS in the first place. That's not a bug in the calculator or in PEMDAS; it's two different, both internally consistent, conventions for reading the same string of characters. Knowing which convention the tool in front of you uses matters as much as knowing the rule itself.

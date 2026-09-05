@@ -1,0 +1,47 @@
+export const metadata = {
+  title: "Right Triangle Cheat Sheet",
+  description: "Every formula you need for right triangles — Pythagorean theorem, basic trig ratios, special triangles — on one page.",
+  date: "2026-08-01",
+  category: "Cheatsheets",
+  excerpt: "Pythagorean theorem, the three basic trig ratios, and the two special-case triangles worth memorizing outright.",
+};
+
+## The Pythagorean theorem
+
+For a right triangle with legs $a$, $b$ and hypotenuse $c$:
+
+$$
+a^2 + b^2 = c^2
+$$
+
+Solve for any one side given the other two:
+
+- $c = \sqrt{a^2 + b^2}$
+- $a = \sqrt{c^2 - b^2}$ (and symmetrically for $b$)
+
+## The three basic trig ratios
+
+For an acute angle $\theta$ in a right triangle, relative to the sides adjacent to and opposite that angle:
+
+| Ratio | Formula |
+|---|---|
+| Sine | $\sin\theta = \dfrac{\text{opposite}}{\text{hypotenuse}}$ |
+| Cosine | $\cos\theta = \dfrac{\text{adjacent}}{\text{hypotenuse}}$ |
+| Tangent | $\tan\theta = \dfrac{\text{opposite}}{\text{adjacent}}$ |
+
+A common mnemonic: **SOH-CAH-TOA**.
+
+## Two special triangles worth memorizing
+
+**45-45-90** (an isosceles right triangle): if the two legs have length $x$, the hypotenuse is $x\sqrt{2}$.
+
+**30-60-90**: if the shortest side (opposite the 30° angle) has length $x$, the side opposite 60° is $x\sqrt{3}$, and the hypotenuse is $2x$.
+
+Recognizing one of these two ratios instantly, without re-deriving it from trig, is one of the fastest wins available on a timed test.
+
+## Area and perimeter
+
+- Area: $\dfrac{1}{2} \times \text{leg}_1 \times \text{leg}_2$ (the two legs are always perpendicular, so they work directly as base and height)
+- Perimeter: $\text{leg}_1 + \text{leg}_2 + \text{hypotenuse}$
+
+Want to check your work? The [Right Triangle Solver](/tools/right-triangle-solver) computes any of these instantly from two known values.

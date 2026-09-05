@@ -1,0 +1,21 @@
+export const metadata = {
+  title: "How openmaths decides when a question needs a diagram",
+  description: "Not every question benefits from a diagram — arithmetic doesn't, geometry almost always does. Here's how that decision actually gets made.",
+  date: "2026-06-30",
+  category: "Engineering",
+  excerpt: "\"What's 15% of 340?\" doesn't need a diagram. \"Find the area of triangle ABC\" almost always does. The distinction turns out to matter a lot.",
+};
+
+Not every math question benefits from a diagram. "What's 15% of 340?" is fully answered by a number and maybe one line of arithmetic — drawing something for it would be noise, not help. "Find the area of triangle ABC given these three side lengths," on the other hand, is a question about a *shape*, and a shape you can't see is a shape you have to hold entirely in your head while also doing the arithmetic.
+
+## The decision has to happen with the answer, not after it
+
+The natural-seeming approach — generate the answer, then separately ask "should this have a diagram?" — turns out to be the wrong shape for the problem. By the time a full explanation exists, the model has already committed to a particular way of solving it; asking afterward whether a diagram would help is asking a question the answer has already implicitly settled. So the decision has to be made in the *same* pass that produces the explanation itself, as part of deciding how to solve the problem in the first place — not bolted on afterward.
+
+## Getting it wrong in either direction is a real cost
+
+Forcing a diagram onto a pure arithmetic or algebra question doesn't just waste a render — it actively suggests there's spatial structure to the problem that isn't actually there, which is its own kind of confusing. Skipping a diagram on a genuine geometry question is the more obviously bad failure: the explanation ends up describing angles and side lengths in prose that would take one glance at a real picture to understand. Both failure modes come from the same root cause — treating "does this need a diagram" as an afterthought instead of a first-class part of solving the problem.
+
+## What this looks like from the outside
+
+You don't see any of this machinery directly. You just notice that asking "what's 12% of 85" gets you a clean number, and asking "find the area of the triangle formed by these three points" gets you an actual triangle, drawn, with the relevant lengths and angles marked — because the model decided, at the same moment it decided *how* to solve your question, that this particular answer needed a shape to go with it.

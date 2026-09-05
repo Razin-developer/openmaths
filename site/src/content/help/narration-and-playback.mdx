@@ -1,0 +1,25 @@
+export const metadata = {
+  title: "How narration and voice playback work",
+  description: "Turning on read-aloud, what gets narrated, and how it stays in sync with the diagram.",
+  category: "Features",
+};
+
+## Turning narration on
+
+Open a question with a diagram in fullscreen playback mode and enable "Narrate steps aloud" from the player's settings. The first time you play a given diagram with narration on, it synthesizes real audio for each step — after that, the audio is cached, so replaying it is instant.
+
+## What actually gets narrated
+
+Narration reads the same step captions and "why?" explanations shown in the text answer — it's not a separate, independently-written script. That's deliberate: the voice and the text are always describing the same explanation, so you can switch between reading and listening (or do both) without anything contradicting itself.
+
+## Staying in sync with the diagram
+
+Playback advances the diagram one step at a time, and narration for a given step plays while that step is highlighted. If you pause, both the diagram and the audio pause together; scrubbing to a different step jumps the narration to match.
+
+## Active recall pauses
+
+If you also enable "Active recall pause," playback stops briefly between steps with a short prompt ("what do you expect the next step to show?") before continuing — a deliberate break in the explanation, not a bug in the pacing. Both narration and active recall pauses are fully optional and off by default.
+
+## Exporting as video
+
+Once a diagram has played through at least once, the export button can turn the walkthrough into a video file — with narration included if it was on, or silent if not.
