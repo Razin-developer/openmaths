@@ -1,0 +1,10 @@
+packages:
+  - "app"
+  - "server"
+  - "packages/*"
+
+onlyBuiltDependencies:
+  - "@prisma/engines"
+  - "esbuild"
+  - "prisma"
+  - "unrs-resolver"

@@ -1,0 +1,58 @@
+{
+  "name": "@openmaths/components",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./theme-provider": "./src/theme-provider.tsx",
+    "./theme-toggle": "./src/theme-toggle.tsx",
+    "./lib/utils": "./src/lib/utils.ts",
+    "./theme.css": "./src/theme.css",
+    "./ui/alert-dialog": "./src/ui/alert-dialog.tsx",
+    "./ui/avatar": "./src/ui/avatar.tsx",
+    "./ui/badge": "./src/ui/badge.tsx",
+    "./ui/button-group": "./src/ui/button-group.tsx",
+    "./ui/button": "./src/ui/button.tsx",
+    "./ui/card": "./src/ui/card.tsx",
+    "./ui/command": "./src/ui/command.tsx",
+    "./ui/context-menu": "./src/ui/context-menu.tsx",
+    "./ui/dialog": "./src/ui/dialog.tsx",
+    "./ui/dropdown-menu": "./src/ui/dropdown-menu.tsx",
+    "./ui/form": "./src/ui/form.tsx",
+    "./ui/input-group": "./src/ui/input-group.tsx",
+    "./ui/input": "./src/ui/input.tsx",
+    "./ui/kbd": "./src/ui/kbd.tsx",
+    "./ui/label": "./src/ui/label.tsx",
+    "./ui/popover": "./src/ui/popover.tsx",
+    "./ui/progress": "./src/ui/progress.tsx",
+    "./ui/scroll-area": "./src/ui/scroll-area.tsx",
+    "./ui/select": "./src/ui/select.tsx",
+    "./ui/separator": "./src/ui/separator.tsx",
+    "./ui/sheet": "./src/ui/sheet.tsx",
+    "./ui/skeleton": "./src/ui/skeleton.tsx",
+    "./ui/slider": "./src/ui/slider.tsx",
+    "./ui/switch": "./src/ui/switch.tsx",
+    "./ui/tabs": "./src/ui/tabs.tsx",
+    "./ui/textarea": "./src/ui/textarea.tsx",
+    "./ui/toggle-group": "./src/ui/toggle-group.tsx",
+    "./ui/toggle": "./src/ui/toggle.tsx",
+    "./ui/tooltip": "./src/ui/tooltip.tsx"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "cmdk": "^1.1.1",
+    "lucide-react": "^1.30.0",
+    "radix-ui": "^1.6.7",
+    "react": "19.2.8",
+    "react-hook-form": "^7.85.0",
+    "tailwind-merge": "^3.6.0"
+  },
+  "devDependencies": {
+    "@types/react": "^19",
+    "typescript": "^5"
+  }
+}

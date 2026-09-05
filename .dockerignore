@@ -1,0 +1,13 @@
+# Unanchored, like .gitignore — applies across app/, server/, packages/*.
+node_modules
+.turbo
+.next
+out
+dist
+coverage
+.git
+.env
+.env.*
+!.env.example
+*.log
+.DS_Store

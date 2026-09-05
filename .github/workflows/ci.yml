@@ -1,0 +1,118 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  checks:
+    name: typecheck / lint / test / build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      # Generates packages/db/generated/prisma — gitignored, and every other package's
+      # typecheck/build needs it present first. No DATABASE_URL required: confirmed locally that
+      # `prisma generate` only reads the schema file, never touches a live database.
+      - name: Generate Prisma client
+        run: pnpm --filter @openmaths/db run build
+
+      - name: Typecheck
+        run: pnpm turbo run typecheck
+
+      - name: Lint
+        run: pnpm turbo run lint
+
+      - name: Test
+        run: pnpm turbo run test
+
+      - name: Build
+        run: pnpm turbo run build
+        env:
+          # Inlined into app's client bundle at build time (see app/Dockerfile's own comment on
+          # this same point). CI never serves the built app, so the placeholder only needs to make
+          # the build succeed, not be reachable.
+          NEXT_PUBLIC_API_BASE_URL: http://localhost:4000
+
+  docker-build:
+    name: docker build (app, server)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: docker/setup-buildx-action@v3
+
+      - name: Build server image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: server/Dockerfile
+          push: false
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Build app image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: app/Dockerfile
+          push: false
+          build-args: |
+            NEXT_PUBLIC_API_BASE_URL=http://localhost:4000
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  compose-smoke:
+    name: docker compose smoke test
+    runs-on: ubuntu-latest
+    needs: docker-build
+    steps:
+      - uses: actions/checkout@v4
+
+      # Placeholder-but-valid secrets, not real ones (this repo has no GitHub Secrets configured
+      # for this yet, and none are needed — HACKCLUB_AI_API_KEY only needs to be present and
+      # non-empty to pass server/src/env.ts's boot-time validation; this smoke test never actually
+      # exercises a real AI call). Confirms the whole app<->server<->postgres compose network
+      # actually comes up — the exact end-to-end check this session's own local Docker Desktop
+      # couldn't run (see the plan file's P5 Docker section for why).
+      - name: Write CI-only .env
+        run: |
+          cat > .env <<'EOF'
+          AUTH_SECRET=ci-smoke-test-secret-not-for-real-use
+          HACKCLUB_AI_API_KEY=ci-smoke-test-placeholder-key
+          CORS_ORIGIN=http://localhost:3000
+          NEXT_PUBLIC_API_BASE_URL=http://localhost:4000
+          COOKIE_DOMAIN=
+          EOF
+
+      - name: Start the stack
+        run: docker compose up --build -d --wait --wait-timeout 180
+
+      - name: Hit server /healthz
+        run: curl -sf http://localhost:4000/healthz
+
+      - name: Hit app /login
+        run: curl -sf http://localhost:3000/login | grep -q "Sign in"
+
+      - name: Dump logs on failure
+        if: failure()
+        run: docker compose logs
+
+      - name: Tear down
+        if: always()
+        run: docker compose down -v

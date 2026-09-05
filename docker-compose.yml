@@ -1,0 +1,97 @@
+services:
+  postgres:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: openmaths
+      POSTGRES_PASSWORD: openmaths
+      POSTGRES_DB: openmaths
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U openmaths"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  # One-off: applies packages/db/prisma/migrations against `postgres`, then exits. Reuses
+  # server/Dockerfile's pre-prune `build` target, which still has the `prisma` CLI (server's own
+  # runtime image deliberately drops it — see server/Dockerfile) — no separate Dockerfile needed
+  # for a job that only ever runs once per deploy.
+  migrate:
+    build:
+      context: .
+      dockerfile: server/Dockerfile
+      target: build
+    command: ["pnpm", "--filter", "@openmaths/db", "exec", "prisma", "migrate", "deploy"]
+    environment:
+      DATABASE_URL: postgres://openmaths:openmaths@postgres:5432/openmaths
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  server:
+    build:
+      context: .
+      dockerfile: server/Dockerfile
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      PORT: 4000
+      DATABASE_URL: postgres://openmaths:openmaths@postgres:5432/openmaths
+      # Required, no default — a missing secret should fail `docker compose up` immediately, not
+      # boot a server that then 500s (or silently mis-signs sessions) on the first real request.
+      AUTH_SECRET: ${AUTH_SECRET:?Set AUTH_SECRET in .env (openssl rand -base64 32) — must match app's}
+      HACKCLUB_AI_API_KEY: ${HACKCLUB_AI_API_KEY:?Set HACKCLUB_AI_API_KEY in .env — see https://ai.hackclub.com/dashboard}
+      CORS_ORIGIN: ${CORS_ORIGIN:-http://localhost:3000}
+      COOKIE_DOMAIN: ${COOKIE_DOMAIN:-}
+    ports:
+      - "4000:4000"
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+    healthcheck:
+      # Node's own `fetch`, not `curl`/`wget` — not guaranteed present in `node:22-alpine`, and
+      # unverifiable from this session (no working local Docker engine — see the plan file's P5
+      # Docker section), whereas `node` itself obviously is.
+      test: ["CMD", "node", "-e", "fetch('http://localhost:4000/healthz').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 15s
+
+  app:
+    build:
+      context: .
+      dockerfile: app/Dockerfile
+      args:
+        # Build-time only (see app/Dockerfile) — must match `server`'s externally-reachable
+        # origin, not the in-network service name (`http://server:4000`), since this is fetched
+        # from the end user's own browser, not container-to-container.
+        NEXT_PUBLIC_API_BASE_URL: ${NEXT_PUBLIC_API_BASE_URL:-http://localhost:4000}
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      # app/src/auth.ts's Edge Middleware still does its own real, independent Prisma query and
+      # JWT verification (see docs/PRD-split-nextjs-app-and-hono-server.md's P4 notes) — app is
+      # not a pure UI-only container, it genuinely needs both of these too.
+      DATABASE_URL: postgres://openmaths:openmaths@postgres:5432/openmaths
+      AUTH_SECRET: ${AUTH_SECRET:?Set AUTH_SECRET in .env (openssl rand -base64 32) — must match server's}
+      HACKCLUB_AI_API_KEY: ${HACKCLUB_AI_API_KEY:?Set HACKCLUB_AI_API_KEY in .env}
+    ports:
+      - "3000:3000"
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://localhost:3000/login').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 15s
+
+volumes:
+  postgres_data:

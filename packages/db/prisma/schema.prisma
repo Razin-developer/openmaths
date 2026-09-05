@@ -1,0 +1,350 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id             String          @id @default(cuid())
+  displayName    String?
+  email          String?         @unique
+  passwordHash   String?
+  /** Bumped to invalidate every existing JWT session at once (PRD "Auth & Security Audit" F8 —
+   * "sign out everywhere" / session revocation). A JWT's signature staying valid says nothing
+   * about whether it should still be trusted; auth.ts's jwt() callback compares the token's
+   * stamped version against this column on its periodic revalidation pass and rejects a stale
+   * one. Bumped automatically on password change, and on-demand via the "Sign out of all
+   * devices" action — see lib/auth/sessions.ts. */
+  tokenVersion   Int             @default(0)
+  /** TOTP (RFC 6238) secret, base32-encoded (PRD "Auth & Security Audit" F13 — MFA). Null = MFA
+   * not set up. Only meaningful once `totpEnabled` is true — a secret can exist mid-setup (user
+   * scanned the QR but hasn't confirmed a code yet) without granting MFA's protection. NOTE: this
+   * is stored in plaintext, matching this app's existing threat model (no field-level encryption
+   * anywhere else — passwordHash is the only secret at rest, and it's a hash, not reversible);
+   * a production deployment handling real secrets should encrypt this column. */
+  totpSecret     String?
+  totpEnabled    Boolean         @default(false)
+  /** One-time recovery codes for when the authenticator device is unavailable — bcrypt-hashed
+   * like passwords, never stored/shown again after generation. Each is consumed (removed from
+   * this array) on use. */
+  totpBackupCodes String[]       @default([])
+  /** Null until the account holder proves control of the inbox (PRD "Auth & Security Audit" F1).
+   * Email-based access — matching a CanvasCollaborator row by email — requires this to be set;
+   * an unverified account can sign up with anyone's email but gains none of that email's shares.
+   * Existing accounts predating this field were grandfathered verified at migration time. */
+  emailVerified  DateTime?
+  defaultModelId String?
+  imageModelId   String?
+  fileModelId    String?
+  drawingModelId String?
+  fontSize       String?
+  fontFamily     String?
+  personalization Json?
+  createdAt      DateTime        @default(now())
+
+  canvases       Canvas[]
+  events         ActivityEvent[]
+  skillTags      SkillTag[]
+  skills         Skill[]
+  notifications  Notification[]
+}
+
+/** Email-verification tokens (PRD F1) — deliberately not a NextAuth Adapter VerificationToken
+ * (this app uses Credentials + JWT sessions, no DB adapter), just a plain table this app's own
+ * signup/verify routes read and write. One-time use: deleted on successful verification. */
+model EmailVerificationToken {
+  id        String   @id @default(cuid())
+  email     String
+  token     String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  @@index([email])
+}
+
+/** Password-reset tokens (PRD F13) — same shape/lifecycle as EmailVerificationToken (one-time,
+ * expiring, deleted on use); kept as a separate model since the two flows have different
+ * validity windows and it keeps "prove you own this inbox" (signup) conceptually distinct from
+ * "prove you own this account" (reset), even though the mechanics are identical. */
+model PasswordResetToken {
+  id        String   @id @default(cuid())
+  email     String
+  token     String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+
+  @@index([email])
+}
+
+model Skill {
+  id           String   @id @default(cuid())
+  userId       String
+  user         User     @relation(fields: [userId], references: [id])
+  name         String
+  slug         String
+  description  String?
+  instructions String
+  isBuiltIn    Boolean  @default(false)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@unique([userId, slug])
+  @@index([userId])
+}
+
+model Canvas {
+  id          String       @id @default(cuid())
+  userId      String
+  user        User         @relation(fields: [userId], references: [id])
+  title       String       @default("Untitled canvas")
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  blocks        Block[]
+  connections   Connection[]
+  collaborators CanvasCollaborator[]
+  shareLinks    CanvasShareLink[]
+
+  @@index([userId])
+}
+
+enum CanvasRole {
+  OWNER
+  EDITOR
+  COMMENTER
+  VIEWER
+}
+
+enum CollaboratorStatus {
+  PENDING
+  ACTIVE
+}
+
+model CanvasCollaborator {
+  id        String   @id @default(cuid())
+  canvasId  String
+  canvas    Canvas   @relation(fields: [canvasId], references: [id], onDelete: Cascade)
+  email     String
+  /** Defaults to EDITOR so pre-existing rows (created before roles existed) keep behaving exactly
+   * as they did — every collaborator had full edit access. */
+  role      CanvasRole         @default(EDITOR)
+  /** PENDING until a User account with this email exists (they haven't "arrived" yet — nothing to
+   * notify); flips to ACTIVE (and fires a Notification) the moment that account exists, whether
+   * it already did at invite time or they sign up afterward (see auth/signup/route.ts). Access
+   * itself is NOT gated on status — canvasAccessWhere already matches by email regardless — this
+   * only drives the invite/notification UX. */
+  status       CollaboratorStatus @default(ACTIVE)
+  invitedById  String?
+  invitedAt    DateTime           @default(now())
+  createdAt DateTime @default(now())
+
+  @@unique([canvasId, email])
+  @@index([canvasId])
+}
+
+model CanvasShareLink {
+  id        String   @id @default(cuid())
+  canvasId  String
+  canvas    Canvas   @relation(fields: [canvasId], references: [id], onDelete: Cascade)
+  token     String   @unique @default(cuid())
+  /** The access level anyone redeeming this link is capped at — default VIEWER (least privilege;
+   * Editor is a deliberate choice made when generating the link). */
+  role        CanvasRole @default(VIEWER)
+  expiresAt   DateTime?
+  createdById String?
+  createdAt DateTime @default(now())
+
+  @@index([canvasId])
+}
+
+enum NotificationType {
+  CANVAS_SHARED
+  ROLE_CHANGED
+  CANVAS_UNSHARED
+  COMMENT_ADDED
+  USAGE_CAP_WARNING
+  GENERATION_FINISHED
+}
+
+model Notification {
+  id        String           @id @default(cuid())
+  userId    String
+  user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type      NotificationType
+  canvasId  String?
+  actorId   String?
+  /** Free-form display payload — e.g. { canvasTitle, role } — kept denormalized so a notification
+   * still reads sensibly even if the canvas/actor is later renamed or deleted. */
+  data      Json?
+  readAt    DateTime?
+  createdAt DateTime         @default(now())
+
+  @@index([userId, readAt])
+  @@index([userId, canvasId, readAt])
+}
+
+enum BlockKind {
+  QUESTION
+  SUB_QUESTION
+  GRAPH
+  NOTE
+  LINK
+}
+
+enum BlockStatus {
+  DRAFT
+  GENERATING
+  READY
+  ERROR
+}
+
+model Block {
+  id            String      @id @default(cuid())
+  canvasId      String
+  canvas        Canvas      @relation(fields: [canvasId], references: [id], onDelete: Cascade)
+  parentBlockId String?
+  parent        Block?      @relation("BlockToSub", fields: [parentBlockId], references: [id])
+  children      Block[]     @relation("BlockToSub")
+
+  kind            BlockKind   @default(QUESTION)
+  status          BlockStatus @default(DRAFT)
+  title           String?
+  prompt          String
+  modelId         String?
+  reasoningEffort String?
+  scene           Json?
+  notes           String?
+  errorMessage    String?
+  /** LINK-kind blocks only — an array of open browser tabs: {id, url, title?, favicon?}[]. The
+   * first entry is the "primary" page; `prompt` is kept in sync with it for back-compat. */
+  tabs            Json?
+  /** GRAPH-kind blocks only — cached narration: {voice, scriptHash, clips: {step, audioUrl,
+   * durationMs}[]}. Regenerated only when scriptHash no longer matches the current scene/solution
+   * (see ai/tts.ts) so re-opening the same diagram doesn't re-synthesize speech every time. */
+  narration       Json?
+
+  positionX     Float       @default(0)
+  positionY     Float       @default(0)
+
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+
+  messages      Message[]
+  outgoing      Connection[]    @relation("SourceBlock")
+  incoming      Connection[]    @relation("TargetBlock")
+  events        ActivityEvent[]
+
+  @@index([canvasId])
+  @@index([parentBlockId])
+}
+
+enum MessageRole {
+  USER
+  ASSISTANT
+  SYSTEM
+}
+
+model Message {
+  id          String      @id @default(cuid())
+  blockId     String
+  block       Block       @relation(fields: [blockId], references: [id], onDelete: Cascade)
+  role        MessageRole
+  content     String
+  attachments Json?
+  /** Structured reasoning steps ({claim, detail?, reason?}[]) for ASSISTANT messages that
+   * answered with a multi-step solution — see SolutionStepSchema in ai/envelope.ts. Null for
+   * USER messages and for answers that didn't need structured steps. */
+  solution    Json?
+  /** The pinned final result string (e.g. "72 square units"), set alongside `solution`. */
+  finalAnswer String?
+  /** A DOM/KaTeX table form ({caption?, headers, rows}) — see TableFormSchema in ai/envelope.ts.
+   * Additive alongside `solution`/scene, never a replacement for either. */
+  table       Json?
+  /** PRD v2 §5 — the Form architecture: an ordered array of Form objects ({kind, ...}, see
+   * FormSchema in ai/envelope.ts), additive alongside solution/table/scene, never a replacement
+   * for them — null for the overwhelming majority of ASSISTANT messages, which use those flat
+   * fields instead. Present only when the answer genuinely needed more than one diagram/table or
+   * a non-default content order. */
+  forms       Json?
+  createdAt   DateTime    @default(now())
+
+  @@index([blockId])
+}
+
+model Connection {
+  id            String   @id @default(cuid())
+  canvasId      String
+  canvas        Canvas   @relation(fields: [canvasId], references: [id], onDelete: Cascade)
+  sourceBlockId String
+  source        Block    @relation("SourceBlock", fields: [sourceBlockId], references: [id], onDelete: Cascade)
+  targetBlockId String
+  target        Block    @relation("TargetBlock", fields: [targetBlockId], references: [id], onDelete: Cascade)
+  label         String?
+  createdAt     DateTime @default(now())
+
+  @@unique([sourceBlockId, targetBlockId])
+  @@index([canvasId])
+}
+
+enum ActivityEventType {
+  BLOCK_CREATED
+  BLOCK_GENERATED
+  BLOCK_EXPORTED_PDF
+  BLOCK_EXPORTED_VIDEO
+  CANVAS_CREATED
+  CANVAS_OPENED
+  /** A student watched a step-by-step walkthrough (narrated or plain animation) all the way to
+   * its last step — the Zeigarnik-completion / replay-rate learning-funnel signal PRD v2 §9 asks
+   * for ("step completion" telemetry). Fired once per natural completion (not on a manual jump/
+   * scrub to the last step) — see GraphAnimationFullscreen.tsx / SolutionSteps.tsx. */
+  STEP_COMPLETED
+}
+
+model ActivityEvent {
+  id        String            @id @default(cuid())
+  userId    String
+  user      User              @relation(fields: [userId], references: [id])
+  blockId   String?
+  block     Block?            @relation(fields: [blockId], references: [id], onDelete: SetNull)
+  /** Denormalized from block.canvasId at write time — not a relation (mirrors Notification's own
+   * denormalized canvasId) so per-canvas usage rollups (PRD "User System" §4) are a single indexed
+   * query instead of a join through Block, and the event still reads sensibly if the block/canvas
+   * is later deleted. Nullable because not every ActivityEventType is block/canvas-scoped. */
+  canvasId  String?
+  type      ActivityEventType
+  metadata  Json?
+  createdAt DateTime          @default(now())
+
+  @@index([userId, createdAt])
+  @@index([canvasId, createdAt])
+}
+
+/**
+ * PRD "Auth & Security Audit" F11 — the distributed backend for `RateLimitStore`
+ * (lib/rateLimit.ts's `PostgresRateLimitStore`). No relations to User/Block/Canvas on purpose:
+ * `key` is an app-defined string like `login-ip:1.2.3.4` or `narrate:<userId>`, not always tied
+ * to a real row (an IP-keyed bucket has no user), and this table's only job is fixed-window
+ * bookkeeping — join-ability isn't a goal.
+ */
+model RateLimitBucket {
+  key         String   @id
+  count       Int
+  windowStart DateTime
+}
+
+model SkillTag {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  name      String
+  level     Int      @default(0)
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, name])
+}

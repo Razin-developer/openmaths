@@ -1,0 +1,33 @@
+{
+  "name": "@openmaths/shared",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./dsl/types": "./src/dsl/types.ts",
+    "./dsl/schema": "./src/dsl/schema.ts",
+    "./ai/envelope": "./src/ai/envelope.ts",
+    "./ai/skills": "./src/ai/skills.ts",
+    "./ai/attachments": "./src/ai/attachments.ts",
+    "./ai/attachmentLimits": "./src/ai/attachmentLimits.ts",
+    "./ai/modelCapabilities": "./src/ai/modelCapabilities.ts",
+    "./ai/requestDedupe": "./src/ai/requestDedupe.ts",
+    "./ai/personalization": "./src/ai/personalization.ts",
+    "./ai/streamAnswerExtractor": "./src/ai/streamAnswerExtractor.ts",
+    "./ai/prompt": "./src/ai/prompt.ts",
+    "./board/types": "./src/board/types.ts",
+    "./board/apiMappers": "./src/board/apiMappers.ts",
+    "./auth/breachCheck": "./src/auth/breachCheck.ts",
+    "./speech": "./src/speech.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "zod": "^4.4.3",
+    "@razinmohammedpt/hackai-sdk": "^2.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^5"
+  }
+}

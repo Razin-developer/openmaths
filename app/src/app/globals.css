@@ -1,0 +1,82 @@
+@import "tailwindcss";
+/* Tailwind v4's automatic content detection walks up from this file to find the project root,
+ * which lands on `app/`'s own package.json in this monorepo — it won't see class names used
+ * inside packages/components/src/** (a sibling package, not a subdirectory of app/) without this
+ * explicit @source, the documented fix for exactly this "shared UI package" monorepo shape. */
+@source "../../../packages/components/src";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+/* Design tokens (:root/.dark custom properties + the @theme inline tailwind mapping) moved to
+ * packages/components (PRD "Split into app + server" P0) — this app-specific stylesheet keeps
+ * `@import "tailwindcss"` itself (Tailwind v4's content scanning is anchored to this file's
+ * location, so the app's own real PostCSS entry point must own it) plus whatever isn't reusable
+ * by another future app: user-font vars, body defaults, the reduced-motion collapse, and React
+ * Flow's theme overrides. */
+@import "@openmaths/components/theme.css";
+
+:root {
+  --user-font-size: 0.8125rem;
+  --user-font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--user-font-family);
+  font-size: var(--user-font-size);
+  font-weight: 400;
+  line-height: 1.5;
+  letter-spacing: -0.006em;
+}
+
+* {
+  border-color: var(--border);
+  outline-color: var(--ring);
+}
+
+/* PRD "UI/UX Polish" §6 — honor prefers-reduced-motion app-wide: every CSS transition/animation
+ * (popover/dialog motion via tw-animate-css, hover transitions, etc.) collapses to effectively
+ * instant. The diagram engine's own per-frame draw animation isn't CSS-driven — see the
+ * usePrefersReducedMotion gate in TimelineTicker.tsx, which speeds it up rather than disabling it
+ * outright so a reduced-motion user can still watch the construction, just compressed. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/*
+ * @xyflow/react's default stylesheet bakes in a blue accent (rgba(0, 89, 220, ...) for the
+ * drag-selection box, #1a192b/#3367d9 for handles/resize) that clashes with the strict
+ * monochrome theme. Overriding its CSS custom properties keeps every React Flow surface
+ * (selection box, handles, edges, connection line, controls, minimap) on theme tokens.
+ */
+.react-flow {
+  --xy-selection-background-color-default: color-mix(in oklch, var(--foreground) 6%, transparent);
+  --xy-selection-border-default: 1px dashed color-mix(in oklch, var(--foreground) 35%, transparent);
+  --xy-resize-background-color-default: var(--foreground);
+  --xy-node-border-default: none;
+  --xy-node-boxshadow-hover-default: none;
+  --xy-node-boxshadow-selected-default: none;
+  --xy-handle-background-color-default: var(--foreground);
+  --xy-handle-border-color-default: var(--background);
+  --xy-connectionline-stroke-default: var(--muted-foreground);
+  --xy-connectionline-stroke-width-default: 1.5;
+  --xy-edge-stroke-default: var(--border);
+  --xy-edge-stroke-selected-default: var(--foreground);
+  --xy-edge-label-background-color-default: var(--background);
+  --xy-edge-label-color-default: var(--foreground);
+  --xy-minimap-background-color-default: var(--card);
+  --xy-controls-button-background-color-default: var(--card);
+  --xy-controls-button-background-color-hover-default: var(--accent);
+  --xy-controls-button-color-default: var(--foreground);
+  --xy-controls-button-border-color-default: var(--border);
+  --xy-background-color-default: transparent;
+}

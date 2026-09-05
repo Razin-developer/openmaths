@@ -1,8 +1,10 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+# Patterns are unanchored (no leading /) so they apply across the whole monorepo
+# (app/, server/, packages/*), not just the workspace root.
 
 # dependencies
-/node_modules
-/.pnp
+node_modules
+.pnp
 .pnp.*
 .yarn/*
 !.yarn/patches
@@ -10,18 +12,25 @@
 !.yarn/releases
 !.yarn/versions
 
+# turborepo
+.turbo
+
 # testing
-/coverage
+coverage
 
 # next.js
-/.next/
-/out/
+.next/
+out/
 
 # production
-/build
+build
+dist
 
 # misc
 .DS_Store
+
+# local Claude Code tooling state (dev-server launch config, session locks) — not project source
+.claude
 *.pem
 
 # debug
@@ -32,6 +41,7 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env*
+!.env.example
 
 # vercel
 .vercel
@@ -39,3 +49,14 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# prisma generated client (packages/db/generated)
+packages/db/generated
+
+# playwright — e2e/.auth holds a live session cookie (global-setup.ts), never worth committing.
+# An internal slash anchors a gitignore pattern to the directory the .gitignore itself lives in
+# (unlike a plain, slash-free pattern, which really is unanchored) — `**/` is what actually applies
+# this at every level, the way the top-of-file comment already assumes for everything else here.
+**/e2e/.auth
+test-results
+playwright-report
