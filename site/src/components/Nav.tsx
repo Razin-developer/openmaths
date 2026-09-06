@@ -5,9 +5,26 @@ import Link from "next/link";
 import { cn } from "@openmaths/components/lib/utils";
 import { Button } from "./Button";
 import { ThemeToggle } from "./ThemeToggle";
+import { NavDropdown } from "./NavDropdown";
 import { APP_URL } from "@/lib/urls";
 
 const SCROLL_THRESHOLD = 500;
+
+const TOOLS_ITEMS = [
+  { href: "/tools", label: "All tools", description: "The full free-tools hub" },
+  { href: "/tools/right-triangle-solver", label: "Right Triangle Solver" },
+  { href: "/tools/quadratic-equation-solver", label: "Quadratic Equation Solver" },
+  { href: "/tools/slope-calculator", label: "Slope Calculator" },
+  { href: "/tools/mean-median-mode-calculator", label: "Mean, Median & Mode" },
+];
+
+const RESOURCES_ITEMS = [
+  { href: "/blog", label: "Blog", description: "Explanations and product notes" },
+  { href: "/resources", label: "Resources", description: "Reference sheets and guides" },
+  { href: "/help", label: "Help Center", description: "How to use openmaths" },
+  { href: "/faq", label: "FAQ" },
+  { href: "/changelog", label: "Changelog" },
+];
 
 /**
  * Structural nav (PRD P1 scope), with real links added as pages actually ship (P2 added Product
@@ -55,9 +72,8 @@ export function Nav() {
           <Link href="/product" className="transition-colors hover:text-foreground">
             Product
           </Link>
-          <Link href="/tools" className="transition-colors hover:text-foreground">
-            Tools
-          </Link>
+          <NavDropdown label="Tools" items={TOOLS_ITEMS} />
+          <NavDropdown label="Resources" items={RESOURCES_ITEMS} />
           <Link href="/pricing" className="transition-colors hover:text-foreground">
             Pricing
           </Link>

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Section } from "@/components/Section";
 import { Reveal } from "@/components/Reveal";
 import { PricingTable, type PricingTier } from "@/components/PricingTable";
+import { PricingComparison } from "@/components/PricingComparison";
 import { CTABand } from "@/components/CTABand";
 import { APP_URL } from "@/lib/urls";
 
@@ -69,6 +70,15 @@ export default function PricingPage() {
       <Section width="wide">
         <Reveal>
           <PricingTable tiers={TIERS} />
+        </Reveal>
+      </Section>
+
+      <Section width="wide">
+        <Reveal className="mb-8 text-center">
+          <h2 className="text-h3 font-semibold">Compare plans in detail</h2>
+        </Reveal>
+        <Reveal index={1}>
+          <PricingComparison />
         </Reveal>
       </Section>
 

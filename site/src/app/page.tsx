@@ -6,6 +6,7 @@ import { GlowBand } from "@/components/GlowBand";
 import { HeroCanvas } from "@/components/HeroCanvas";
 import { FeatureRow } from "@/components/FeatureRow";
 import { TrustPanel } from "@/components/TrustPanel";
+import { TrustLogos } from "@/components/TrustLogos";
 import { CompareBento } from "@/components/CompareBento";
 import { StatCounter } from "@/components/StatCounter";
 import { BentoGrid, BentoCard } from "@/components/BentoGrid";
@@ -120,10 +121,14 @@ export default function HomePage() {
         <Reveal index={2} className="mt-10">
           <TrustPanel tabs={TRUST_TABS} />
         </Reveal>
-        <Reveal index={3} className="mt-16 flex flex-wrap justify-center gap-12">
-          <StatCounter value={50000} suffix="+" label="Problems explained" />
-          <StatCounter value={98} suffix="%" label="Say it helped them understand, not just answer" />
-          <StatCounter value={4} suffix=" answer forms" label="Steps, diagrams, tables, plots" />
+        <Reveal index={3} className="mt-16 flex flex-col items-center gap-16">
+          {/* Landing-rework PRD §4.4 truthfulness gate: no fabricated usage/satisfaction numbers
+              (a bold, precise "50,000+" or "98%" with nothing behind it is exactly the kind of
+              placeholder stat the audit itself criticized) — "4 answer forms" is the one number
+              here that's actually true today, and TrustLogos shows real product scope instead of
+              claiming institutional endorsements that don't exist. */}
+          <StatCounter value={4} suffix=" answer forms" label="Steps, diagrams, tables, plots — every question gets the form that fits" />
+          <TrustLogos />
         </Reveal>
       </Section>
 

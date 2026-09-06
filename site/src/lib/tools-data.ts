@@ -4,24 +4,26 @@ import { QuadraticSolver } from "@/components/tools/QuadraticSolver";
 import { PercentageCalculator } from "@/components/tools/PercentageCalculator";
 import { FractionCalculator } from "@/components/tools/FractionCalculator";
 import { UnitConverter } from "@/components/tools/UnitConverter";
+import { SlopeCalculator } from "@/components/tools/SlopeCalculator";
+import { StatisticsCalculator } from "@/components/tools/StatisticsCalculator";
 
 export interface ToolMeta {
   slug: string;
   name: string;
-  category: "Algebra" | "Geometry" | "Converters" | "Arithmetic";
+  category: "Algebra" | "Geometry" | "Converters" | "Arithmetic" | "Graphing" | "Statistics";
   shortDescription: string;
   howTo: string[];
   component: ComponentType;
 }
 
 /**
- * PRD §6's launch list names 12 tools, "ship 4-6 first, expand" — this is 5, one per category
- * the hub groups by (§5.3's "/tools" category grid: Algebra, Geometry, Calculus, Graphing,
- * Converters, Statistics — Calculus/Graphing/Statistics are real remaining scope, not shipped
- * here). Each tool's actual computation lives in `lib/tools/*` as plain, dependency-free
- * functions — reusing `packages/shared`'s DSL was considered and rejected for this pass: that
- * package's exports are geometry-scene/envelope types built for the app's diagram engine, not
- * generic arithmetic, so there's nothing to actually reuse yet for tools this simple.
+ * PRD §6's launch list names 12 tools, "ship 4-6 first, expand" — Landing-rework PRD §6.3 asked to
+ * grow toward 8-10; this is 7, now covering Graphing and Statistics too (Calculus is real
+ * remaining scope, not shipped here). Each tool's actual computation lives in `lib/tools/*` as
+ * plain, dependency-free functions — reusing `packages/shared`'s DSL was considered and rejected
+ * for this pass: that package's exports are geometry-scene/envelope types built for the app's
+ * diagram engine, not generic arithmetic, so there's nothing to actually reuse yet for tools this
+ * simple.
  */
 export const TOOLS: ToolMeta[] = [
   {
@@ -69,6 +71,28 @@ export const TOOLS: ToolMeta[] = [
     shortDescription: "Convert between length, weight, and temperature units.",
     howTo: ["Choose a category (length, weight, or temperature).", "Enter a value and pick the units to convert between."],
     component: UnitConverter,
+  },
+  {
+    slug: "slope-calculator",
+    name: "Slope Calculator",
+    category: "Graphing",
+    shortDescription: "Find the slope and equation of the line through two points.",
+    howTo: [
+      "Enter the coordinates of two points, (x₁, y₁) and (x₂, y₂).",
+      "The slope and the line's equation (y = mx + b) are computed instantly — a vertical line correctly shows an undefined slope instead of a wrong number.",
+    ],
+    component: SlopeCalculator,
+  },
+  {
+    slug: "mean-median-mode-calculator",
+    name: "Mean, Median & Mode Calculator",
+    category: "Statistics",
+    shortDescription: "Find the mean, median, mode, and range of a list of numbers.",
+    howTo: [
+      "Enter a list of numbers, separated by commas or spaces.",
+      "Mean, median, mode (if any value repeats), and range update as you type.",
+    ],
+    component: StatisticsCalculator,
   },
 ];
 

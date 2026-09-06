@@ -6,7 +6,7 @@ import { TOOLS } from "@/lib/tools-data";
 
 export const metadata: Metadata = {
   title: "Free Math Tools",
-  description: "Free, no-login math calculators — right triangle, quadratic equations, percentages, fractions, and unit conversion.",
+  description: "Free, no-login math calculators — right triangles, quadratics, percentages, fractions, unit conversion, slope, and statistics.",
 };
 
 const CATEGORIES = Array.from(new Set(TOOLS.map((t) => t.category)));
@@ -36,7 +36,7 @@ export default function ToolsPage() {
               <Reveal key={tool.slug} index={i}>
                 <Link
                   href={`/tools/${tool.slug}`}
-                  className="flex h-full flex-col gap-2 rounded-xl border border-border bg-muted/40 p-6 transition-colors hover:bg-muted"
+                  className="flex h-full flex-col gap-2 rounded-xl border border-border-hairline bg-surface-card p-6 transition-colors hover:bg-surface-card-hover"
                 >
                   <h3 className="text-h4 font-semibold">{tool.name}</h3>
                   <p className="text-body-sm text-muted-foreground">{tool.shortDescription}</p>
