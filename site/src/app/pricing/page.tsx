@@ -7,12 +7,14 @@ import { APP_URL } from "@/lib/urls";
 
 export const metadata: Metadata = {
   title: "Pricing",
-  description: "Free / Pro / Education tiers for openmaths — the AI math tutor that draws and narrates every step.",
+  description: "Starter, Pro Researcher, and Lab · Institution tiers for openmaths — the AI math tutor that draws and narrates every step.",
 };
 
+// TODO(razin): Pro Researcher's $16/$12 figures and the 25% annual discount are provisional —
+// confirm before launch (Landing-rework PRD §6.6, open question #2).
 const TIERS: PricingTier[] = [
   {
-    name: "Free",
+    name: "Starter",
     price: "$0",
     description: "For getting started.",
     features: ["Unlimited canvases", "Step-by-step answers with diagrams", "Community support"],
@@ -20,37 +22,35 @@ const TIERS: PricingTier[] = [
     href: APP_URL,
   },
   {
-    name: "Pro",
-    price: "$12",
-    period: "mo",
+    name: "Pro Researcher",
+    priceMonthly: 16,
+    priceAnnualMonthly: 12,
     description: "For regular use.",
-    features: ["Everything in Free", "Voice narration & video export", "Higher generation limits", "Priority support"],
+    features: ["Everything in Starter", "Voice narration & video export", "Higher generation limits", "Priority support"],
     cta: "Start Pro trial",
     href: APP_URL,
     highlighted: true,
   },
   {
-    name: "Education",
-    price: "Contact us",
-    description: "For classrooms and schools.",
-    features: ["Everything in Pro", "Classroom/roster management", "Shared canvases for a whole class", "Volume pricing"],
+    name: "Lab · Institution",
+    price: "Custom",
+    description: "For classrooms and research labs.",
+    features: ["Everything in Pro Researcher", "Classroom/roster management", "Shared canvases for a whole class", "Volume pricing"],
     cta: "Talk to us",
-    // Placeholder — /contact is P5 scope (Trust & company pages); a mailto avoids a dead internal
-    // link in the meantime. Swap for the real contact form once it exists.
-    href: "mailto:hello@openmaths.dev",
+    href: "/contact",
   },
 ];
 
 const FAQ = [
-  { q: "Is there a free tier?", a: "Yes — Free includes unlimited canvases and every answer form (steps, diagrams, tables, plots), just with lower monthly generation limits than Pro." },
-  { q: "Can I cancel anytime?", a: "Yes, Pro is month-to-month with no lock-in." },
-  { q: "Do you offer student discounts?", a: "Education pricing covers classrooms and schools — reach out and we'll work out a rate for your situation." },
+  { q: "Is there a free tier?", a: "Yes — Starter includes unlimited canvases and every answer form (steps, diagrams, tables, plots), just with lower monthly generation limits than Pro Researcher." },
+  { q: "Can I cancel anytime?", a: "Yes, Pro Researcher is month-to-month with no lock-in — switch to annual billing whenever you're ready for the discount." },
+  { q: "Do you offer classroom or institution pricing?", a: "Lab · Institution covers classrooms and research labs — reach out and we'll work out a rate for your situation." },
 ];
 
 /**
- * Pricing figures above are placeholders (PRD §5.3's own scope for this page — real tiers/prices
- * aren't decided yet), structured exactly like real ones so the layout is real and swapping in
- * final numbers later is a content change, not a rebuild.
+ * Pricing figures above are provisional (flagged inline, PRD §6.6 open question #2), structured
+ * exactly like real ones so the layout is real and swapping in final numbers later is a content
+ * change, not a rebuild.
  */
 export default function PricingPage() {
   return (

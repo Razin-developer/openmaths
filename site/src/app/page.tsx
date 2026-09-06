@@ -3,13 +3,14 @@ import { Section } from "@/components/Section";
 import { Reveal } from "@/components/Reveal";
 import { Button } from "@/components/Button";
 import { GlowBand } from "@/components/GlowBand";
+import { HeroCanvas } from "@/components/HeroCanvas";
 import { FeatureRow } from "@/components/FeatureRow";
 import { TrustPanel } from "@/components/TrustPanel";
 import { CompareBento } from "@/components/CompareBento";
 import { StatCounter } from "@/components/StatCounter";
 import { BentoGrid, BentoCard } from "@/components/BentoGrid";
 import { PinnedSteps } from "@/components/PinnedSteps";
-import { TriangleSolverDemo } from "@/components/TriangleSolverDemo";
+import { Sandbox } from "@/components/Sandbox";
 import { TESTIMONIALS } from "@/lib/placeholder-content";
 import { TOOLS } from "@/lib/tools-data";
 import { APP_URL } from "@/lib/urls";
@@ -86,6 +87,10 @@ export default function HomePage() {
             <Button href={APP_URL} variant="secondary" className="!bg-white !text-accent-blue-600 hover:opacity-90" ctaId="hero-start-free">
               Start free
             </Button>
+            <div className="mt-4 w-full">
+              <HeroCanvas />
+            </div>
+            <p className="text-caption text-white/60">Click the + to branch a sub-question</p>
           </GlowBand>
         </Reveal>
       </Section>
@@ -171,10 +176,10 @@ export default function HomePage() {
 
       <Section>
         <Reveal className="mb-10 text-center">
-          <h2 className="text-h2 font-semibold">Try the right-triangle solver — no sign-up</h2>
+          <h2 className="text-h2 font-semibold">See it solve — no sign-up</h2>
         </Reveal>
         <Reveal index={1}>
-          <TriangleSolverDemo />
+          <Sandbox />
         </Reveal>
       </Section>
 
