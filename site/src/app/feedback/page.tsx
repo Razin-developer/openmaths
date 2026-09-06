@@ -6,6 +6,7 @@ import { ContactForm } from "@/components/ContactForm";
 export const metadata: Metadata = {
   title: "Feedback",
   description: "Tell us what's working, what isn't, and what you'd like to see next.",
+  alternates: { canonical: "https://openmaths.com/feedback" },
 };
 
 export default function FeedbackPage() {

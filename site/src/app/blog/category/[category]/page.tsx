@@ -13,7 +13,7 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }: { params: Promise<{ category: string }> }): Promise<Metadata> {
   const { category } = await params;
-  return { title: `Blog: ${category}` };
+  return { title: `Blog: ${category}`, alternates: { canonical: `https://openmaths.com/blog/category/${category}` } };
 }
 
 export default async function BlogCategoryPage({ params }: { params: Promise<{ category: string }> }) {

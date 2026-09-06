@@ -12,7 +12,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const { slug } = await params;
   const study = getCaseStudy(slug);
   if (!study) return {};
-  return { title: study.company, description: study.summary };
+  return { title: study.company, description: study.summary, alternates: { canonical: `https://openmaths.com/customers/${slug}` } };
 }
 
 export default async function CaseStudyPage({ params }: { params: Promise<{ slug: string }> }) {

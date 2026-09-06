@@ -7,6 +7,7 @@ import { getAllResources } from "@/lib/content";
 export const metadata: Metadata = {
   title: "Resources",
   description: "Guides and cheatsheets for common math topics.",
+  alternates: { canonical: "https://openmaths.com/resources" },
 };
 
 export default async function ResourcesPage() {
@@ -38,7 +39,7 @@ export default async function ResourcesPage() {
                 <Reveal key={resource.slug} index={i}>
                   <Link
                     href={`/resources/${resource.slug}`}
-                    className="flex h-full flex-col gap-2 rounded-xl border border-border bg-muted/40 p-6 transition-colors hover:bg-muted"
+                    className="flex h-full flex-col gap-2 rounded-xl border border-border-hairline bg-surface-card p-6 transition-colors hover:bg-surface-card-hover"
                   >
                     <h3 className="text-h4 font-semibold">{resource.title}</h3>
                     <p className="text-body-sm text-muted-foreground">{resource.excerpt}</p>

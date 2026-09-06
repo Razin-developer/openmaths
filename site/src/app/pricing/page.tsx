@@ -9,6 +9,7 @@ import { APP_URL } from "@/lib/urls";
 export const metadata: Metadata = {
   title: "Pricing",
   description: "Starter, Pro Researcher, and Lab · Institution tiers for openmaths — the AI math tutor that draws and narrates every step.",
+  alternates: { canonical: "https://openmaths.com/pricing" },
 };
 
 // TODO(razin): Pro Researcher's $16/$12 figures and the 25% annual discount are provisional —

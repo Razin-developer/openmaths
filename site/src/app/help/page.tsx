@@ -7,6 +7,7 @@ import { getAllHelpArticles } from "@/lib/content";
 export const metadata: Metadata = {
   title: "Help Center",
   description: "Search openmaths help articles, or browse by category.",
+  alternates: { canonical: "https://openmaths.com/help" },
 };
 
 /**

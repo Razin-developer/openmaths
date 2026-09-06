@@ -6,6 +6,7 @@ import { CTABand } from "@/components/CTABand";
 export const metadata: Metadata = {
   title: "About",
   description: "Why openmaths exists, and what it's actually trying to do differently.",
+  alternates: { canonical: "https://openmaths.com/about" },
 };
 
 export default function AboutPage() {

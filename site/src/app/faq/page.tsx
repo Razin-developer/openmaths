@@ -7,6 +7,7 @@ import { FAQ_ITEMS } from "@/lib/faq-data";
 export const metadata: Metadata = {
   title: "FAQ",
   description: "Frequently asked questions about openmaths.",
+  alternates: { canonical: "https://openmaths.com/faq" },
 };
 
 export default function FAQPage() {

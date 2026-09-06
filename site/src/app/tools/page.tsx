@@ -7,6 +7,7 @@ import { TOOLS } from "@/lib/tools-data";
 export const metadata: Metadata = {
   title: "Free Math Tools",
   description: "Free, no-login math calculators — right triangles, quadratics, percentages, fractions, unit conversion, slope, and statistics.",
+  alternates: { canonical: "https://openmaths.com/tools" },
 };
 
 const CATEGORIES = Array.from(new Set(TOOLS.map((t) => t.category)));

@@ -7,6 +7,7 @@ import { getAllChangelogEntries } from "@/lib/content";
 export const metadata: Metadata = {
   title: "Changelog",
   description: "What's new in openmaths.",
+  alternates: { canonical: "https://openmaths.com/changelog" },
 };
 
 export default async function ChangelogPage() {
@@ -29,7 +30,7 @@ export default async function ChangelogPage() {
                   {new Date(entry.date).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })}
                 </span>
                 {entry.tags.map((tag) => (
-                  <span key={tag} className="rounded-pill bg-accent-100 px-2.5 py-0.5 text-caption font-medium text-accent-700">
+                  <span key={tag} className="rounded-pill bg-accent-blue-500/15 px-2.5 py-0.5 text-caption font-medium text-accent-blue-600">
                     {tag}
                   </span>
                 ))}

@@ -4,7 +4,7 @@ import { ProseArticle } from "@/components/ProseArticle";
 import { LegalNotice } from "@/components/LegalNotice";
 import Content, { metadata as pageMeta } from "@/content/legal/terms.mdx";
 
-export const metadata: Metadata = { title: pageMeta.title };
+export const metadata: Metadata = { title: pageMeta.title, alternates: { canonical: "https://openmaths.com/terms" } };
 
 export default function TermsPage() {
   return (

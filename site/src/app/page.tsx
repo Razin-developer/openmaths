@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { Shapes, PenTool, BarChart3, Table2, Volume2, GitBranch, LayoutGrid, Share2, Download, Smartphone, Layers, Sparkles, Infinity as InfinityIcon, Check } from "lucide-react";
 import { Section } from "@/components/Section";
 import { Reveal } from "@/components/Reveal";
@@ -15,6 +16,8 @@ import { Sandbox } from "@/components/Sandbox";
 import { TESTIMONIALS } from "@/lib/placeholder-content";
 import { TOOLS } from "@/lib/tools-data";
 import { APP_URL } from "@/lib/urls";
+
+export const metadata: Metadata = { alternates: { canonical: "https://openmaths.com" } };
 
 const FORMS = [
   { icon: <Shapes className="size-6 text-accent-blue-500" />, title: "Geometry", description: "Draws the diagram, then explains it step by step.", span: "2" as const, featured: true },

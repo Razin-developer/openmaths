@@ -6,6 +6,7 @@ import { ContactForm } from "@/components/ContactForm";
 export const metadata: Metadata = {
   title: "Report a Bug",
   description: "Found something broken? Let us know what happened.",
+  alternates: { canonical: "https://openmaths.com/report-bug" },
 };
 
 export default function ReportBugPage() {

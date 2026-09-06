@@ -11,6 +11,7 @@ import { CASE_STUDIES } from "@/lib/case-studies";
 export const metadata: Metadata = {
   title: "Reviews",
   description: "What learners say about openmaths.",
+  alternates: { canonical: "https://openmaths.com/reviews" },
 };
 
 export default function ReviewsPage() {
@@ -44,7 +45,7 @@ export default function ReviewsPage() {
         <div className="mx-auto flex max-w-[60ch] flex-col gap-4">
           {CASE_STUDIES.map((study, i) => (
             <Reveal key={study.slug} index={i}>
-              <Link href={`/customers/${study.slug}`} className="flex flex-col gap-1 rounded-xl border border-border bg-muted/40 p-6 transition-colors hover:bg-muted">
+              <Link href={`/customers/${study.slug}`} className="flex flex-col gap-1 rounded-xl border border-border-hairline bg-surface-card p-6 transition-colors hover:bg-surface-card-hover">
                 <span className="text-caption font-mono text-muted-foreground">{study.company}</span>
                 <h3 className="text-h4 font-semibold">{study.headline}</h3>
               </Link>

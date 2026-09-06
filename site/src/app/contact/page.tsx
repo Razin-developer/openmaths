@@ -6,6 +6,7 @@ import { ContactForm } from "@/components/ContactForm";
 export const metadata: Metadata = {
   title: "Contact",
   description: "Get in touch with the openmaths team.",
+  alternates: { canonical: "https://openmaths.com/contact" },
 };
 
 export default function ContactPage() {

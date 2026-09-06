@@ -7,6 +7,7 @@ import { getAllPosts } from "@/lib/content";
 export const metadata: Metadata = {
   title: "Blog",
   description: "Math explainers and product notes from openmaths.",
+  alternates: { canonical: "https://openmaths.com/blog" },
 };
 
 export default async function BlogPage() {

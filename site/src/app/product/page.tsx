@@ -8,6 +8,7 @@ import { CTABand } from "@/components/CTABand";
 export const metadata: Metadata = {
   title: "Product",
   description: "How openmaths draws, narrates, and lets you branch every math explanation on a real canvas.",
+  alternates: { canonical: "https://openmaths.com/product" },
 };
 
 interface FeatureRowProps {

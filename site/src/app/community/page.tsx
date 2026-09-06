@@ -6,6 +6,7 @@ import { Button } from "@/components/Button";
 export const metadata: Metadata = {
   title: "Community",
   description: "Where to reach the openmaths team directly, until a larger community space exists.",
+  alternates: { canonical: "https://openmaths.com/community" },
 };
 
 /**
