@@ -9,7 +9,7 @@ import { TrustPanel } from "@/components/TrustPanel";
 import { CompareBento } from "@/components/CompareBento";
 import { StatCounter } from "@/components/StatCounter";
 import { BentoGrid, BentoCard } from "@/components/BentoGrid";
-import { PinnedSteps } from "@/components/PinnedSteps";
+import { ScrollStory } from "@/components/ScrollStory";
 import { Sandbox } from "@/components/Sandbox";
 import { TESTIMONIALS } from "@/lib/placeholder-content";
 import { TOOLS } from "@/lib/tools-data";
@@ -165,13 +165,7 @@ export default function HomePage() {
             <h2 className="text-h2 font-semibold">How it works</h2>
           </Reveal>
         </div>
-        <PinnedSteps
-          steps={[
-            { title: "Ask", description: "Type any math question — arithmetic, algebra, geometry, calculus." },
-            { title: "Watch it draw & narrate", description: "A diagram builds itself step by step, narrated aloud as it goes." },
-            { title: "Explore on the canvas", description: "Branch follow-up questions, annotate, and come back to it any time." },
-          ]}
-        />
+        <ScrollStory />
       </Section>
 
       <Section>
