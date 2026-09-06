@@ -61,7 +61,14 @@
   --accent-emerald-500: #10b981;
   --accent-emerald-600: #059669;
 
-  --gradient-reasoning: linear-gradient(135deg, var(--accent-blue-500), var(--accent-violet-500));
+  /* Fixed at the 600 shade regardless of theme (unlike `--accent`) — this is a "branded card"
+   * background (GlowBand, CompareBento's right panel) that always carries white text, so its
+   * darkness is chosen for that contrast, not for matching light/dark surface tone. Verified via
+   * the WCAG relative-luminance formula: white text at full opacity on this gradient's midpoint
+   * (~#514fec) is 5.71:1; the 500-shade version measured only 4.09:1 even at full white, which
+   * fails AA (4.5:1) for the body-sized subtext these cards carry — a real bug caught by
+   * calculating contrast rather than eyeballing it. */
+  --gradient-reasoning: linear-gradient(135deg, var(--accent-blue-600), var(--accent-violet-600));
   --gradient-glow-blue: radial-gradient(60% 60% at 50% 0%, rgba(59, 130, 246, 0.35), transparent);
 
   --background: var(--surface-base);
@@ -69,7 +76,11 @@
   --muted: var(--surface-shell);
   --muted-foreground: var(--paper-600);
   --border: var(--border-hairline);
-  --accent: var(--accent-blue-500);
+  /* 600, not 500: blue-500 text/button-background on this light surface measures 3.52:1 (text)
+   * and white-on-blue-500 measures 3.68:1 (button) — both fail AA's 4.5:1 for normal text. 600
+   * measures 4.94:1 and 5.17:1 respectively. Found via the same contrast calculation, not assumed
+   * safe because it "looked fine". */
+  --accent: var(--accent-blue-600);
   --accent-foreground: var(--paper-50);
 
   --gradient-glow: radial-gradient(60% 60% at 50% 0%, oklch(0.86 0.06 275 / 35%), transparent);
@@ -103,7 +114,10 @@
   --border-strong: rgba(255, 255, 255, 0.16);
   --glass-bg: rgba(20, 23, 28, 0.75);
 
-  --gradient-reasoning: linear-gradient(135deg, var(--accent-blue-400), var(--accent-violet-400));
+  /* `--gradient-reasoning` is intentionally NOT redefined here — it stays the fixed 600/600 shade
+   * from `:root` in both themes, since it's a branded-card background whose contrast with white
+   * text was tuned directly (see the comment on its `:root` definition), not something that
+   * should get lighter just because the surrounding page went dark. */
   --gradient-glow-blue: radial-gradient(60% 60% at 50% 0%, rgba(59, 130, 246, 0.45), transparent);
 
   --background: var(--surface-base);
@@ -225,6 +239,22 @@ body {
     animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;
     scroll-behavior: auto !important;
+  }
+}
+
+/* View Transitions (Landing-rework PRD §5) — a short cross-fade for same-origin document
+ * navigations opted into via layout.tsx's `<meta name="view-transition">`. The `*`/`*::before`/
+ * `*::after` reduced-motion rule above does NOT reach `::view-transition-*` pseudo-elements (they
+ * live in a separate top-layer tree), so they need their own explicit guard here. */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: var(--duration-slow);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation-duration: 0.001ms !important;
   }
 }
 

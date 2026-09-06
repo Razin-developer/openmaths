@@ -80,7 +80,7 @@ export default function HomePage() {
             <h1 className="text-display-xl md:text-display-2xl font-semibold tracking-tight text-balance">
               Watch math explain itself
             </h1>
-            <p className="max-w-[52ch] text-body-lg text-white/85">
+            <p className="max-w-[52ch] text-body-lg text-white/90">
               An AI math tutor that draws the diagram, narrates every step, and lets you branch and
               explore on an infinite canvas.
             </p>
@@ -90,7 +90,7 @@ export default function HomePage() {
             <div className="mt-4 w-full">
               <HeroCanvas />
             </div>
-            <p className="text-caption text-white/60">Click the + to branch a sub-question</p>
+            <p className="text-caption text-white/90">Click the + to branch a sub-question</p>
           </GlowBand>
         </Reveal>
       </Section>
@@ -228,7 +228,7 @@ export default function HomePage() {
         <Reveal>
           <GlowBand>
             <h2 className="text-h1 font-semibold text-balance">Build a better way to study math</h2>
-            <p className="max-w-[52ch] text-body-lg text-white/85">
+            <p className="max-w-[52ch] text-body-lg text-white/90">
               Unlimited canvases and every answer form on the Free plan — upgrade only for narration,
               video export, and higher limits.
             </p>

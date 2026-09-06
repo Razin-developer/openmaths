@@ -64,7 +64,7 @@ export function PricingTable({ tiers }: { tiers: PricingTier[] }) {
               )}
             >
               {tier.highlighted && (
-                <span className="self-start rounded-pill bg-accent-violet-500 px-3 py-1 text-caption font-medium text-white">Most Popular</span>
+                <span className="self-start rounded-pill bg-accent-violet-600 px-3 py-1 text-caption font-medium text-white">Most Popular</span>
               )}
               <div className="flex flex-col gap-2">
                 <h3 className="text-h4 font-semibold">{tier.name}</h3>
@@ -90,7 +90,7 @@ export function PricingTable({ tiers }: { tiers: PricingTier[] }) {
               <Button
                 href={tier.href}
                 variant={tier.highlighted ? "primary" : "secondary"}
-                className={cn("mt-auto", tier.highlighted && "!bg-accent-violet-500 hover:!opacity-90")}
+                className={cn("mt-auto", tier.highlighted && "!bg-accent-violet-600 hover:!opacity-90")}
                 ctaId={`pricing-${tier.name.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`}
               >
                 {tier.cta}

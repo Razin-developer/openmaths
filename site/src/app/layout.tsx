@@ -67,6 +67,15 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
+        {/* Landing-rework PRD §5: opts full (cross-document) navigations into the browser's native
+            View Transitions — a same-origin nav cross-fades instead of hard-cutting. This is the
+            standards-based half of §5's ask; React's own <ViewTransition> primitive (which would
+            also smooth App Router's client-side navigations) needs React's canary channel and
+            isn't in the stable 19.2 release this app runs — confirmed directly, not assumed — so
+            wiring a manual `document.startViewTransition()` around the router would be fighting
+            React's own batching rather than using a supported primitive. Zero-risk, progressive:
+            unsupported browsers and reduced-motion users just get the normal instant navigation. */}
+        <meta name="view-transition" content="same-origin" />
         <Script id="theme-init" strategy="beforeInteractive">
           {THEME_INIT_SCRIPT}
         </Script>

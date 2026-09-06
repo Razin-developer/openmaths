@@ -228,7 +228,12 @@ export function HeroCanvas() {
         role="img"
         aria-label="An animated diagram of a right triangle with legs 6 and 8 drawing itself, with a button to branch into a sub-question about a triangle with legs 5 and 12."
         className="cursor-pointer"
-      />
+      >
+        {/* No-JS fallback (a <canvas> only renders its children when the element itself can't
+            render) — the animated scene needs JS, but a visitor without it still sees the
+            underlying fact rather than empty space. */}
+        A right triangle with legs 6 and 8 has hypotenuse 10 (6² + 8² = 10²).
+      </canvas>
     </div>
   );
 }

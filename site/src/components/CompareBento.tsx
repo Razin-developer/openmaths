@@ -41,10 +41,10 @@ export function CompareBento({
         </div>
       </div>
       <div className="flex flex-col justify-between gap-8 rounded-xl p-8 text-white" style={{ background: "var(--gradient-reasoning)" }}>
-        <span className="text-caption font-mono-code uppercase tracking-wide text-white/70">{rightEyebrow}</span>
+        <span className="text-caption font-mono-code uppercase tracking-wide text-white">{rightEyebrow}</span>
         <div>
           <h3 className="text-h3 font-semibold text-balance">{rightTitle}</h3>
-          <p className="mt-3 text-body text-white/85">{rightBody}</p>
+          <p className="mt-3 text-body text-white/90">{rightBody}</p>
         </div>
         <Button href={rightHref} variant="secondary" className="self-start !bg-white !text-accent-blue-600 hover:opacity-90" ctaId="compare-see-it-work">
           {rightCta}
