@@ -6,6 +6,7 @@ import { FractionCalculator } from "@/components/tools/FractionCalculator";
 import { UnitConverter } from "@/components/tools/UnitConverter";
 import { SlopeCalculator } from "@/components/tools/SlopeCalculator";
 import { StatisticsCalculator } from "@/components/tools/StatisticsCalculator";
+import { GcdLcmCalculator } from "@/components/tools/GcdLcmCalculator";
 
 export interface ToolMeta {
   slug: string;
@@ -93,6 +94,17 @@ export const TOOLS: ToolMeta[] = [
       "Mean, median, mode (if any value repeats), and range update as you type.",
     ],
     component: StatisticsCalculator,
+  },
+  {
+    slug: "gcd-lcm-calculator",
+    name: "GCD & LCM Calculator",
+    category: "Arithmetic",
+    shortDescription: "Find the greatest common divisor and least common multiple of two numbers.",
+    howTo: [
+      "Enter two positive whole numbers.",
+      "The GCD (via Euclid's algorithm) and LCM update instantly.",
+    ],
+    component: GcdLcmCalculator,
   },
 ];
 

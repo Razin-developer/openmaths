@@ -1,7 +1,15 @@
 import type { Metadata } from "next";
+import { PenTool, Volume2, GitBranch } from "lucide-react";
 import { Section } from "@/components/Section";
 import { Reveal } from "@/components/Reveal";
 import { CTABand } from "@/components/CTABand";
+import { FeatureRow } from "@/components/FeatureRow";
+
+const VALUES = [
+  { icon: <PenTool className="size-6 text-accent-blue-500" />, title: "Draw it, don't describe it", description: "A diagram builds live, step by step — never a shape summarized in a sentence." },
+  { icon: <Volume2 className="size-6 text-accent-violet-500" />, title: "Narrate the reasoning", description: "Every step is read aloud in sync with the drawing, not left for you to infer." },
+  { icon: <GitBranch className="size-6 text-accent-emerald-500" />, title: "A canvas, not a chat log", description: "Branch, annotate, and come back later — nothing you asked scrolls away." },
+];
 
 export const metadata: Metadata = {
   title: "About",
@@ -39,6 +47,15 @@ export default function AboutPage() {
               straight there.
             </p>
           </div>
+        </Reveal>
+      </Section>
+
+      <Section width="wide" surface="shell">
+        <Reveal className="mb-10 text-center">
+          <h2 className="text-h3 font-semibold">Three things a fast-answer tool doesn&rsquo;t do</h2>
+        </Reveal>
+        <Reveal index={1}>
+          <FeatureRow features={VALUES} />
         </Reveal>
       </Section>
 
